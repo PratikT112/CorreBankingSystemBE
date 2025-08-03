@@ -1,8 +1,5 @@
 package com.pratikt112.correbankingsystembe.model;
 
-
-import com.pratikt112.correbankingsystembe.enums.Identifier;
-import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +9,7 @@ import java.io.Serializable;
 
 @Entity
 @Data
-@Table(name="CMOB")
+@Table(name="CUSM")
 @AllArgsConstructor
 @NoArgsConstructor
 public class cmob implements Serializable {
@@ -23,24 +20,27 @@ public class cmob implements Serializable {
     private String socCode;
 
     @Id
-    @Column(name = "CUST_NO", length = 16, nullable = false)
-    private String custNo;
+    @Column(name = "CUST_ACCT_NO", length = 16, nullable = false)
+    private String custAcctNo;
+
+    @Column(name = "TIER_CUST_TYPE", length = 10, nullable = false)
+    private String tier_cust_type;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "IDENTIFIER", length = 1, nullable = false, columnDefinition = "CHAR(1) CHECK(IDENTIFIER IN ('P','T'))")
-    private Identifier identifier;
+    @Column(name = "RESI_STATUS", length = 1, nullable = false, columnDefinition = "CHAR(1) CHECK(RESI_STATUS IN ('1','2','3','4','5'))")
+    private String resiStatus;
 
-    @Column(name = "CUST_MOB_NO", length = 12)
-    private String custMobNo;
+    @Column(name = "CUSTOMER_TYPE", length = 2, nullable = false, columnDefinition = "CHAR(1) CHECK(CUSTOMER_TYPE IN ('1','2','3','4','5'))")
+    private String customerType;
 
-    @Column(name = "ISD_CODE", length = 3)
-    private String isdCode;
+    @Column(name = "CUSTOMER_STATUS", length = 3)
+    private String customerStatus;
 
-    @Column(name = "OLD_CUST_MOB_NO", length = 12)
-    private String oldCustMobNo;
+    @Column(name = "BSR_ORG_CODE", length = 3)
+    private String bsrOrgCode;
 
-    @Column(name = "OLD_MOB_ISD_CODE", length = 3)
-    private String oldMobIsdCode;
+    @Column(name = "CIS_ORG_CODE", length = 3)
+    private String cisOrgCode;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "VERIFY_FLAG", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N' CHECK(VERIFY_FLAG IN ('Y','E','S','N','X'))")
@@ -59,3 +59,4 @@ public class cmob implements Serializable {
     private String dov;
 
 }
+
