@@ -6,11 +6,16 @@ import com.pratikt112.correbankingsystembe.repo.CmobRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CmobService {
 
     @Autowired
     private CmobRepo cmobRepo;
 
-    public List<Cmob> getCmobByCustomer(String cust_no) { return cmobRepo.findAllByCustNo(cust_no)}
+    public static List<Cmob> searchCmobByCustNo(String custNo) {
+        return cmobRepo.findAllByCustNo(cust_no);
+    }
+
 }
