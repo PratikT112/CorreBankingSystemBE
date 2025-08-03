@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Table(name="CMOB")
 @AllArgsConstructor
 @NoArgsConstructor
-public class cmob implements Serializable {
+public class Cmob implements Serializable {
 
 
     @Id

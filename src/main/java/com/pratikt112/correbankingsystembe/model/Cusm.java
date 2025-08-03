@@ -12,8 +12,7 @@ import java.io.Serializable;
 @Table(name="CUSM")
 @AllArgsConstructor
 @NoArgsConstructor
-public class cmob implements Serializable {
-
+public class Cusm implements Serializable {
 
     @Id
     @Column(name="SOC_CODE", length = 3, nullable = false)
@@ -30,21 +29,20 @@ public class cmob implements Serializable {
     @Column(name = "RESI_STATUS", length = 1, nullable = false, columnDefinition = "CHAR(1) CHECK(RESI_STATUS IN ('1','2','3','4','5'))")
     private String resiStatus;
 
-    @Column(name = "CUSTOMER_TYPE", length = 2, nullable = false, columnDefinition = "CHAR(1) CHECK(CUSTOMER_TYPE IN ('1','2','3','4','5'))")
+    @Column(name = "CUSTOMER_TYPE", length = 2, nullable = false, columnDefinition = "CHAR(2) CHECK(CUSTOMER_TYPE IN ('01','02'))")
     private String customerType;
 
     @Column(name = "CUSTOMER_STATUS", length = 3)
     private String customerStatus;
+
+    @Column(name = "CREATE_DT", length = 8)
+    private String createDt;
 
     @Column(name = "BSR_ORG_CODE", length = 3)
     private String bsrOrgCode;
 
     @Column(name = "CIS_ORG_CODE", length = 3)
     private String cisOrgCode;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "VERIFY_FLAG", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N' CHECK(VERIFY_FLAG IN ('Y','E','S','N','X'))")
-    private VerifyFlag verifyFlag;
 
     @Column(name = "CHNL_ID", length = 5)
     private String chnlId;
@@ -54,9 +52,5 @@ public class cmob implements Serializable {
 
     @Column(name = "CHECKER_ID", length = 7)
     private String checkerId;
-
-    @Column(name = "DOV", length = 1, columnDefinition = "CHAR(1) DEFAULT ' '")
-    private String dov;
-
 }
 
