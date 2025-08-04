@@ -1,7 +1,7 @@
 package com.pratikt112.correbankingsystembe.service;
 
 
-import com.pratikt112.correbankingsystembe.model.Cmob;
+import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.repo.CmobRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

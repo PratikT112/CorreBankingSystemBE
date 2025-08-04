@@ -1,4 +1,4 @@
-package com.pratikt112.correbankingsystembe.model;
+package com.pratikt112.correbankingsystembe.model.cmob;
 
 
 import com.pratikt112.correbankingsystembe.enums.Identifier;
@@ -12,23 +12,21 @@ import java.io.Serializable;
 
 @Entity
 @Data
-@Table(name="CMOB")
+@Table(
+        name = "CMOB",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "CMOB_AK01", columnNames = {"SOC_NO", "CUST_MOB_NO", "CUST_NO", "IDENTIFIER"}),
+                @UniqueConstraint(name = "CMOB_AK02", columnNames = {"SOC_NO", "CHANGE_DATE", "CUST_NO", "IDENTIFIER"}),
+                @UniqueConstraint(name = "CMOB_AK03", columnNames = {"SOC_NO", "OLD_CUST_MOB_NO", "CUST_NO", "IDENTIFIER"})
+        }
+)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cmob implements Serializable {
 
 
-    @Id
-    @Column(name="SOC_CODE", length = 3, nullable = false)
-    private String socCode;
-
-    @Id
-    @Column(name = "CUST_NO", length = 16, nullable = false)
-    private String custNo;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "IDENTIFIER", length = 1, nullable = false, columnDefinition = "CHAR(1) CHECK(IDENTIFIER IN ('P','T'))")
-    private Identifier identifier;
+    @EmbeddedId
+    private CmobId id;
 
     @Column(name = "CUST_MOB_NO", length = 12)
     private String custMobNo;

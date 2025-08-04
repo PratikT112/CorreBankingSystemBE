@@ -1,7 +1,7 @@
 package com.pratikt112.correbankingsystembe.repo;
 
 
-import com.pratikt112.correbankingsystembe.model.Cmob;
+import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
