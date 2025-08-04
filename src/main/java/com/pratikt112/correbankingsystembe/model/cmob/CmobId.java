@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 @Data
@@ -18,6 +19,23 @@ public class CmobId implements Serializable {
     @Column(name = "CUST_NO", length = 16)
     private String custNo;
 
-    @Column(name = "IDENTIFIER", length = 1, nullable = false, columnDefinition = "CHAR(1) CHECK(IDENTIFIER IN ('P','T'))")
-    private Identifier identifier;
+    @Column(name = "IDENTIFIER", length = 1, nullable = false )
+    private String identifier;
+
+
+    @Override
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(!(o instanceof CmobId)) return false;
+        CmobId that = (CmobId) o;
+        return Objects.equals(socNo, that.socNo) &&
+                Objects.equals(custNo, that.custNo) &&
+                Objects.equals(identifier, that.identifier);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(socNo, custNo, identifier);
+    }
+
 }

@@ -14,8 +14,12 @@ public class CmobService {
     @Autowired
     private CmobRepo cmobRepo;
 
-    public static List<Cmob> searchCmobByCustNo(String custNo) {
-        return cmobRepo.findAllByCustNo(cust_no);
+//    public static List<Cmob> searchCmobByCustNo(String custNo) {
+//        return cmobRepo.findAllByCustNo(cust_no);
+//    }
+
+    public Cmob saveCmob(Cmob cmob){
+        return cmobRepo.save(cmob);
     }
 
 }

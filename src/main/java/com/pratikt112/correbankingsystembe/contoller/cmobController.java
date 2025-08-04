@@ -17,9 +17,22 @@ public class cmobController {
     @Autowired
     private CmobService cmobService;
 
-    @GetMapping("/cmob/{custNo}")
-    public ResponseEntity<List<Cmob>> searchCmobByCustNo(@PathVariable String custNo){
-        List<Cmob> mobileNos = CmobService.searchCmobByCustNo(custNo);
-        return new ResponseEntity<>(mobileNos, HttpStatus.OK);
+//    @GetMapping("/cmob/{custNo}")
+//    public ResponseEntity<List<Cmob>> searchCmobByCustNo(@PathVariable String custNo){
+//        List<Cmob> mobileNos = CmobService.searchCmobByCustNo(custNo);
+//        return new ResponseEntity<>(mobileNos, HttpStatus.OK);
+//    }
+
+    @PostMapping("/cmob/new")
+    public ResponseEntity<Cmob> saveCmob(@RequestBody Cmob cmob){
+        try {
+            Cmob saved = cmobService.saveCmob(cmob);
+            return ResponseEntity.ok(saved);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+
     }
 }
