@@ -24,15 +24,17 @@ public class cmobController {
 //    }
 
     @PostMapping("/cmob/new")
-    public ResponseEntity<Cmob> saveCmob(@RequestBody Cmob cmob){
+    public ResponseEntity<?> saveCmob(@RequestBody Cmob cmob){
         try {
             Cmob saved = cmobService.saveCmob(cmob);
-            return ResponseEntity.ok(saved);
+            return new ResponseEntity<Cmob>(saved, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
 
-
+    @PutMapping("/cmob/{socNo}/{custNo}/{identifier}")
+    public ResponseEntity<?> amendCmob(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo, @PathVariable("identifier") String identifier){
+        boolean exists = CmobService.amendCmob(socNo, custNo, identifier);
     }
 }

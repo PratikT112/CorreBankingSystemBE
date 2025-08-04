@@ -55,6 +55,23 @@ public class Cmob implements Serializable {
     private String checkerId;
 
     @Column(name = "DOV", length = 1)
-    private String dov = "0";
+    private String dov;
+
+    @PrePersist
+    public void prePersist(){
+        if(this.dov == null) {
+            this.dov = "0";
+        }
+        if(this.makerId == null){
+            this.makerId = "       ";
+        }
+        if(this.checkerId == null){
+            this.checkerId = "       ";
+        }
+        if(this.chnlId == null){
+            this.chnlId = " ";
+        }
+    }
+
 
 }

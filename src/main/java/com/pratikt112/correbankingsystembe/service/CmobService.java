@@ -19,7 +19,16 @@ public class CmobService {
 //    }
 
     public Cmob saveCmob(Cmob cmob){
+        boolean exists = cmobRepo.existsById(cmob.getId());
+        if(exists) {
+            throw new IllegalArgumentException("Cmob entry with this key already exists");
+        }
         return cmobRepo.save(cmob);
+    }
+
+    public Cmob amendCmob(String custNo, String identifier, String newMobile, String newIsd){
+        private id = {}
+        boolean exists = cmobRepo.existsById()
     }
 
 }
