@@ -10,6 +10,8 @@ import java.io.Serializable;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(
         name = "CMOB",
         uniqueConstraints = {
@@ -18,8 +20,7 @@ import java.io.Serializable;
                 @UniqueConstraint(name = "CMOB_AK03", columnNames = {"SOC_NO", "OLD_CUST_MOB_NO", "CUST_NO", "IDENTIFIER"})
         }
 )
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class Cmob implements Serializable {
 
     @EmbeddedId
@@ -40,7 +41,6 @@ public class Cmob implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "VERIFY_FLAG", length = 1)
     private VerifyFlag verifyFlag = VerifyFlag.N;
-
 
     @Column(name = "CHNL_ID", length = 5)
     private String chnlId;

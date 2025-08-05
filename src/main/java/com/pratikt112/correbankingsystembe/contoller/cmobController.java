@@ -2,6 +2,7 @@ package com.pratikt112.correbankingsystembe.contoller;
 
 
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
+import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
 import com.pratikt112.correbankingsystembe.service.CmobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +18,11 @@ public class cmobController {
     @Autowired
     private CmobService cmobService;
 
-//    @GetMapping("/cmob/{custNo}")
-//    public ResponseEntity<List<Cmob>> searchCmobByCustNo(@PathVariable String custNo){
-//        List<Cmob> mobileNos = CmobService.searchCmobByCustNo(custNo);
-//        return new ResponseEntity<>(mobileNos, HttpStatus.OK);
-//    }
+    @GetMapping("/cmob/{socNo}/{custNo}")
+    public ResponseEntity<List<Cmob>> searchCmobByCustNo(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo){
+        List<Cmob> mobileNos = cmobService.searchCmobByCustNo(socNo, custNo);
+        return new ResponseEntity<>(mobileNos, HttpStatus.OK);
+    }
 
     @PostMapping("/cmob/new")
     public ResponseEntity<?> saveCmob(@RequestBody Cmob cmob){
@@ -35,6 +36,7 @@ public class cmobController {
 
     @PutMapping("/cmob/{socNo}/{custNo}/{identifier}")
     public ResponseEntity<?> amendCmob(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo, @PathVariable("identifier") String identifier){
-        boolean exists = CmobService.amendCmob(socNo, custNo, identifier);
+//        boolean exists = cmobService.amendCmob(socNo, custNo, identifier);
+            return null;
     }
 }
