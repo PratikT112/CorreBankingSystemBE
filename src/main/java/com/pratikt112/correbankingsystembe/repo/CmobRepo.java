@@ -16,4 +16,7 @@ public interface CmobRepo extends JpaRepository<Cmob, CmobId> {
 
 //    @Query("SELECT cm from Cmob cm where cm.custNo = :custNo")
 //    List<Cmob> findAllByCustNo(String custNo);
+
+        private int existingCustomersWithMobile()
+
 }
