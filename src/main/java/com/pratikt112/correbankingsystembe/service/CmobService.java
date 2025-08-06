@@ -1,6 +1,7 @@
 package com.pratikt112.correbankingsystembe.service;
 
 
+import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
 import com.pratikt112.correbankingsystembe.model.mobh.Mobh;
@@ -97,6 +98,13 @@ public class CmobService {
         } catch(Exception e){
             throw new RuntimeException("Unexpected error while saving CMOB and MOBH", e);
         }
+    }
+
+    public List<String> verifyMobile(String socNo, String custNo, String isdCode, String custMobNo, String verifyFlag) {
+        Cmob fetched = cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
+        fetched.setVerifyFlag(VerifyFlag.Y);
+        cmobRepo.save(fetched);
+        return List.of(fetched.getIsdCode(), fetched.getCustMobNo(), fetched.getVerifyFlag().toString());
     }
 
 //    public Cmob amendCmob(String custNo, String identifier, String newMobile, String newIsd){

@@ -13,7 +13,6 @@ import java.util.List;
 public interface CmobRepo extends JpaRepository<Cmob, CmobId> {
 
 
-
 //    @Query("SELECT cm from Cmob cm where cm.custNo = :custNo")
 //    List<Cmob> findAllByCustNo(String custNo);
 
@@ -22,4 +21,7 @@ public interface CmobRepo extends JpaRepository<Cmob, CmobId> {
     List<Cmob> searchCmobsById(CmobId id);
 
     List<Cmob> findByIdSocNoAndIdCustNo(String socNo, String custNo);
+
+    Cmob findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(String socNo, String custNo, String isdCode, String custMobNo);
+
 }

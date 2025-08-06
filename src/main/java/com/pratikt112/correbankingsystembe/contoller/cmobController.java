@@ -56,6 +56,13 @@ public class cmobController {
         }
     }
 
+    @PutMapping("/cmob/{socNo}/{custNo}/{isdCode}/{custMobNo}/{verifyFlag}")
+    public ResponseEntity<?> verifyMobile(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo,@PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo, @PathVariable("verifyFlag") String verifyFlag){
+        List<String> updatedMobileFlag = cmobService.verifyMobile(socNo, custNo, isdCode, custMobNo, verifyFlag);
+        return new ResponseEntity<List<String>>(updatedMobileFlag, HttpStatus.OK);
+    }
+
+
     @PutMapping("/cmob/{socNo}/{custNo}/{identifier}")
     public ResponseEntity<?> amendCmob(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo, @PathVariable("identifier") String identifier){
 //        boolean exists = cmobService.amendCmob(socNo, custNo, identifier);
