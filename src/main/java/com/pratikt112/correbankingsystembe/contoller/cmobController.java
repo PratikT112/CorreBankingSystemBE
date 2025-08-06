@@ -24,6 +24,12 @@ public class cmobController {
         return new ResponseEntity<>(mobileNos, HttpStatus.OK);
     }
 
+    @GetMapping("/ocom/{socNo}/{custNo}")
+    public ResponseEntity<List<String>> ocomByCustNo(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo){
+        List<String> ocomMobile = cmobService.OcomFromCmob(socNo, custNo);
+        return new ResponseEntity<>(ocomMobile, HttpStatus.OK);
+    }
+
     @PostMapping("/cmob/new")
     public ResponseEntity<?> saveCmob(@RequestBody Cmob cmob){
         try {

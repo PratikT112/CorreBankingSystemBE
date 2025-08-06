@@ -28,17 +28,36 @@ public class CmobService {
         List<Cmob> mobileNos = cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo);
         if(mobileNos == null || mobileNos.isEmpty()) return Collections.emptyList();
 
-        mobileNos.sort((a,b)->{
-            if("T".equals(a.getId().getIdentifier())) return -1;
-            if("P".equals(b.getId().getIdentifier())) return 1;
-            return 0;
-        });
-
-        Cmob selected = mobileNos.get(0);
-        if(!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")){
-            return List.of("91 ", "8396290402");
+        Cmob selected = null;
+        if(mobileNos.size()==2){
+            selected = mobileNos.get(0).getId().getIdentifier().equals("T")?mobileNos.get(0):mobileNos.get(1);
+            if(!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")){
+                if(List.of("Y","E","S").contains(selected.getVerifyFlag().toString())){
+                    return List.of(selected.getIsdCode(), selected.getCustMobNo());
+                } else if(!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
+                    return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+                } else {
+                    selected = mobileNos.get(0).getId().getIdentifier().equals("P")?mobileNos.get(0):mobileNos.get(1);
+                    if(!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")){
+                        if(List.of("Y","E","S").contains(selected.getVerifyFlag().toString())){
+                            return List.of(selected.getIsdCode(), selected.getCustMobNo());
+                        } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
+                            return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+                        }
+                    }
+                }
+            }
+        } else {
+            selected = mobileNos.get(0);
+            if(!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")){
+                if(List.of("Y","E","S").contains(selected.getVerifyFlag().toString())){
+                    return List.of(selected.getIsdCode(), selected.getCustMobNo());
+                } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
+                    return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+                }
+            }
         }
-        return List.of("91 ", "8396290403");
+        return null;
     }
 
     public List<Cmob> searchCmobByCustNo(String socNo, String custNo){
