@@ -3,7 +3,12 @@ package com.pratikt112.correbankingsystembe.contoller;
 
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
+import com.pratikt112.correbankingsystembe.model.mobh.Mobh;
+import com.pratikt112.correbankingsystembe.model.mobh.MobhId;
+import com.pratikt112.correbankingsystembe.repo.MobhRepo;
 import com.pratikt112.correbankingsystembe.service.CmobService;
+import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
+import com.pratikt112.correbankingsystembe.utility.TimeUtilityHHMMSSmmm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,15 @@ public class cmobController {
     @Autowired
     private CmobService cmobService;
 
+    @Autowired
+    private MobhRepo mobhRepo;
+
+    @Autowired
+    private DateUtilityDDMMYYYY dateUtil;
+
+    @Autowired
+    private TimeUtilityHHMMSSmmm timeUtil;
+
     @GetMapping("/cmob/{socNo}/{custNo}")
     public ResponseEntity<List<Cmob>> searchCmobByCustNo(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo){
         List<Cmob> mobileNos = cmobService.searchCmobByCustNo(socNo, custNo);
@@ -30,10 +44,14 @@ public class cmobController {
         return new ResponseEntity<>(ocomMobile, HttpStatus.OK);
     }
 
+
+
     @PostMapping("/cmob/new")
     public ResponseEntity<?> saveCmob(@RequestBody Cmob cmob){
+        Mobh mobh = new Mobh(new MobhId(cmob.getId().getSocNo(), cmob.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), cmob.getCustMobNo(), cmob.getOldCustMobNo(), cmob.getIsdCode(), cmob.getMakerId(), cmob.getCheckerId(), cmob.getChnlId(), cmob.getId().getIdentifier(), cmob.getVerifyFlag().toString());
         try {
             Cmob saved = cmobService.saveCmob(cmob);
+            Mobh savedMobh = mobhRepo.save(mobh);
             return new ResponseEntity<Cmob>(saved, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);

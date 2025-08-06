@@ -30,8 +30,8 @@ public class Mobh {
     @Column(name = "CHECKER_ID", length = 7)
     private String checkerId = "       ";  // 7 spaces
 
-    @Column(name = "BRANCH_NO", length = 5)
-    private String branchNo = "     ";  // 5 spaces
+//    @Column(name = "BRANCH_NO", length = 5)
+//    private String branchNo = "     ";  // 5 spaces
 
     @Column(name = "TRAN_CHANNEL", length = 1)
     private String tranChannel = " ";  // 1 space

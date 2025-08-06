@@ -20,10 +20,10 @@ public class MobhId implements Serializable {
     @Column(name = "CUST_NO", length = 16, nullable = false)
     private String custNo;
 
-    @Column(name = "CHANGE_DT", length = 9, nullable = false)
+    @Column(name = "CHANGE_DT", length = 8, nullable = false)
     private String changeDt;
 
-    @Column(name = "CHANGE_TIME", length = 8, nullable = false)
+    @Column(name = "CHANGE_TIME", length = 9, nullable = false)
     private String changeTime;
 }
 
