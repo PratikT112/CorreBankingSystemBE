@@ -1,10 +1,12 @@
 package com.pratikt112.correbankingsystembe.model.cmob;
 
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
+import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 
@@ -70,6 +72,9 @@ public class Cmob implements Serializable {
         }
         if(this.chnlId == null){
             this.chnlId = " ";
+        }
+        if(this.changeDate == null){
+            this.changeDate = DateUtilityDDMMYYYY.getSCurrentDateInDDMMYYYY();
         }
     }
 

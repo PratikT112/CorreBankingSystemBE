@@ -48,10 +48,8 @@ public class cmobController {
 
     @PostMapping("/cmob/new")
     public ResponseEntity<?> saveCmob(@RequestBody Cmob cmob){
-        Mobh mobh = new Mobh(new MobhId(cmob.getId().getSocNo(), cmob.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), cmob.getCustMobNo(), cmob.getOldCustMobNo(), cmob.getIsdCode(), cmob.getMakerId(), cmob.getCheckerId(), cmob.getChnlId(), cmob.getId().getIdentifier(), cmob.getVerifyFlag().toString());
         try {
             Cmob saved = cmobService.saveCmob(cmob);
-            Mobh savedMobh = mobhRepo.save(mobh);
             return new ResponseEntity<Cmob>(saved, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);

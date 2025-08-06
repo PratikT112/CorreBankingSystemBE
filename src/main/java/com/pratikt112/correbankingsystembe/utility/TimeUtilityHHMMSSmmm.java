@@ -11,4 +11,10 @@ public class TimeUtilityHHMMSSmmm {
         Date date = new Date();
         return formatter.format(date);
     }
+
+    public static String getSCurrentTimeInHHMMSSSSS() {
+        SimpleDateFormat formatter = new SimpleDateFormat("HHmmssSSS");
+        Date date = new Date();
+        return formatter.format(date);
+    }
 }

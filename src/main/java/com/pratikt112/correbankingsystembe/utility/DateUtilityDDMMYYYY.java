@@ -12,4 +12,10 @@ public class DateUtilityDDMMYYYY {
         Date date = new Date();
         return formatter.format(date);
     }
+
+    public static String getSCurrentDateInDDMMYYYY() {
+        SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+        Date date = new Date();
+        return formatter.format(date);
+    }
 }
