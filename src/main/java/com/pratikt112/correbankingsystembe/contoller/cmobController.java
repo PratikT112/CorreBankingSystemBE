@@ -47,10 +47,10 @@ public class cmobController {
 
 
     @PostMapping("/cmob/new")
-    public ResponseEntity<?> saveCmob(@RequestBody Cmob cmob){
+    public ResponseEntity<?> saveCmob(@RequestBody List<Cmob> cmobList){
         try {
-            Cmob saved = cmobService.saveCmob(cmob);
-            return new ResponseEntity<Cmob>(saved, HttpStatus.OK);
+            List<Cmob> saved = cmobService.saveCmob(cmobList);
+            return new ResponseEntity<List<Cmob>>(saved, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

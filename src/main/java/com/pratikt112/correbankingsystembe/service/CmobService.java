@@ -1,6 +1,7 @@
 package com.pratikt112.correbankingsystembe.service;
 
 
+import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
@@ -15,6 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -81,25 +83,77 @@ public class CmobService {
         return cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo);
     }
 
-    @Transactional
-    public Cmob saveCmob(Cmob cmob){
 
-        try{
-            if(cmobRepo.existsById(cmob.getId())) {
-                throw new IllegalArgumentException("Cmob entry with this key already exists");
+    @Transactional
+    public List<Cmob> saveCmob(List<Cmob> cmobList){
+        List<Cmob> savedCmob = new ArrayList<Cmob>();
+        Cmob first = cmobList.get(0);
+        Cmob second = cmobList.get(1);
+        if(cmobList.size() == 2){
+            if(first.getId().getIdentifier().equals(second.getId().getIdentifier())){
+                throw new IllegalArgumentException("Both Mobile Numbers cannot be Permanent/Temporary");
+            } else {
+                if(first.getCustMobNo().equals(second.getCustMobNo()) && first.getIsdCode().equals(second.getIsdCode())){
+                    throw new IllegalArgumentException("Both temporary and permanent mobile numbers cannot be same");
+                } else {
+                    if((first.getOldMobIsdCode()!=null && first.getOldCustMobNo()!=null) || (second.getOldMobIsdCode()!=null && second.getOldCustMobNo()!=null)){
+                        throw new IllegalArgumentException("Old Mobile numbers not applicable during creation.");
+                    } else{
+                        if(first.getVerifyFlag().equals(VerifyFlag.N) && second.getVerifyFlag().equals(VerifyFlag.N)){
+                            savedCmob.add(cmobRepo.save(first));
+                            savedCmob.add(cmobRepo.save(second));
+                            Mobh mobhFirst = new Mobh(new MobhId(first.getId().getSocNo(), first.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), first.getCustMobNo(), first.getOldCustMobNo(), first.getIsdCode(), first.getMakerId(), first.getCheckerId(), first.getChnlId(), first.getId().getIdentifier(), first.getVerifyFlag().toString());
+                            Mobh mobhSecond = new Mobh(new MobhId(second.getId().getSocNo(), second.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), second.getCustMobNo(), second.getOldCustMobNo(), second.getIsdCode(), second.getMakerId(), second.getCheckerId(), second.getChnlId(), second.getId().getIdentifier(), second.getVerifyFlag().toString());
+                            mobhRepo.save(mobhFirst);
+                            mobhRepo.save(mobhSecond);
+                            return savedCmob;
+
+                        } else {
+                            throw new IllegalArgumentException("Verify Flag other than N not applicable during creation");
+                        }
+                    }
+                }
             }
-            Cmob savedCmob = cmobRepo.save(cmob);
-            Mobh mobh = new Mobh(new MobhId(cmob.getId().getSocNo(), cmob.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), cmob.getCustMobNo(), cmob.getOldCustMobNo(), cmob.getIsdCode(), cmob.getMakerId(), cmob.getCheckerId(), cmob.getChnlId(), cmob.getId().getIdentifier(), cmob.getVerifyFlag().toString());
-            mobhRepo.save(mobh);
-            return savedCmob;
-        } catch(IllegalArgumentException e){
-            throw e;
-        } catch(DataIntegrityViolationException e){
-            throw new RuntimeException("Database constraint violated while saving CMOB or MOBH: " + e.getMostSpecificCause().getMessage(), e);
-        } catch(Exception e){
-            throw new RuntimeException("Unexpected error while saving CMOB and MOBH", e);
+        } else {
+            Cmob theOne = cmobList.getFirst();
+            if(theOne.getId().getIdentifier().equals("P")){
+                if(theOne.getOldMobIsdCode() != null || theOne.getOldCustMobNo() != null){
+                    throw new IllegalArgumentException("Old Mobile number not applicable during creation");
+                } else {
+                    if(theOne.getVerifyFlag().equals(VerifyFlag.N)){
+                        savedCmob.add(cmobRepo.save(theOne));
+                        Mobh mobh = new Mobh(new MobhId(theOne.getId().getSocNo(), theOne.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), theOne.getCustMobNo(), theOne.getOldCustMobNo(), theOne.getIsdCode(), theOne.getMakerId(), theOne.getCheckerId(), theOne.getChnlId(), theOne.getId().getIdentifier(), theOne.getVerifyFlag().toString());
+                        mobhRepo.save(mobh);
+                        return savedCmob;
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("Temporary mobile number cannot be created without Permanent mobile number");
+            }
         }
+        return List.of(new Cmob());
     }
+
+
+//    @Transactional
+//    public Cmob saveCmob(List<Cmob> cmobList){
+//
+//        try{
+//            if(cmobRepo.existsById(cmobList.getId())) {
+//                throw new IllegalArgumentException("Cmob entry with this key already exists");
+//            }
+//            Cmob savedCmob = cmobRepo.save(cmob);
+//            Mobh mobh = new Mobh(new MobhId(cmob.getId().getSocNo(), cmob.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), cmob.getCustMobNo(), cmob.getOldCustMobNo(), cmob.getIsdCode(), cmob.getMakerId(), cmob.getCheckerId(), cmob.getChnlId(), cmob.getId().getIdentifier(), cmob.getVerifyFlag().toString());
+//            mobhRepo.save(mobh);
+//            return savedCmob;
+//        } catch(IllegalArgumentException e){
+//            throw e;
+//        } catch(DataIntegrityViolationException e){
+//            throw new RuntimeException("Database constraint violated while saving CMOB or MOBH: " + e.getMostSpecificCause().getMessage(), e);
+//        } catch(Exception e){
+//            throw new RuntimeException("Unexpected error while saving CMOB and MOBH", e);
+//        }
+//    }
 
     public List<Cmob> findForVerification(String socNo, String custNo, String isdCode, String custMobNo){
         return cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
