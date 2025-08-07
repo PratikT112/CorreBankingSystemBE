@@ -64,6 +64,12 @@ public class Cmob implements Serializable {
         if(this.dov == null) {
             this.dov = "0";
         }
+        if(this.oldCustMobNo == null){
+            this.oldCustMobNo = "            ";
+        }
+        if(this.oldMobIsdCode == null){
+            this.oldMobIsdCode = "   ";
+        }
         if(this.makerId == null){
             this.makerId = "       ";
         }
