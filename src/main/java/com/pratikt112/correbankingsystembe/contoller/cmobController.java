@@ -56,10 +56,21 @@ public class cmobController {
         }
     }
 
-    @PutMapping("/cmob/{socNo}/{custNo}/{isdCode}/{custMobNo}/{verifyFlag}")
-    public ResponseEntity<?> verifyMobile(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo,@PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo, @PathVariable("verifyFlag") String verifyFlag){
-        List<String> updatedMobileFlag = cmobService.verifyMobile(socNo, custNo, isdCode, custMobNo, verifyFlag);
-        return new ResponseEntity<List<String>>(updatedMobileFlag, HttpStatus.OK);
+//    @PutMapping("/cmob/{socNo}/{custNo}/{isdCode}/{custMobNo}/{verifyFlag}")
+//    public ResponseEntity<?> verifyMobile(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo,@PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo, @PathVariable("verifyFlag") String verifyFlag){
+//        List<String> updatedMobileFlag = cmobService.verifyMobile(socNo, custNo, isdCode, custMobNo, verifyFlag);
+//        return new ResponseEntity<List<String>>(updatedMobileFlag, HttpStatus.OK);
+//    }
+
+    @GetMapping("/cmob/{socNo}/{custNo}/{isdCode}/{custMobNo}")
+    public ResponseEntity<?> findForVerification(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo,@PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo){
+        List<Cmob> fetched = null;
+        try{
+            fetched = cmobService.findForVerification(socNo, custNo, isdCode, custMobNo);
+            return new ResponseEntity<List<Cmob>>(fetched, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.OK);
+        }
     }
 
 

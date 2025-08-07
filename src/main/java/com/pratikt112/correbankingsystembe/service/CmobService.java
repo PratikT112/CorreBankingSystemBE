@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CmobService {
@@ -100,12 +101,29 @@ public class CmobService {
         }
     }
 
-    public List<String> verifyMobile(String socNo, String custNo, String isdCode, String custMobNo, String verifyFlag) {
-        Cmob fetched = cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
-        fetched.setVerifyFlag(VerifyFlag.Y);
-        cmobRepo.save(fetched);
-        return List.of(fetched.getIsdCode(), fetched.getCustMobNo(), fetched.getVerifyFlag().toString());
+    public List<Cmob> findForVerification(String socNo, String custNo, String isdCode, String custMobNo){
+        return cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
     }
+
+
+//    public List<String> verifyMobile(String socNo, String custNo, String isdCode, String custMobNo, String verifyFlag) {
+//        List<Cmob> fetched = cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
+//        if(fetched == null){
+//            throw new IllegalArgumentException("Record not found.");
+//        }
+//        if(fetched.size() == 2){
+//            if(Objects.equals(fetched.get(0).getIsdCode(), fetched.get(1).getIsdCode()) && Objects.equals(fetched.get(0).getCustMobNo(), fetched.get(1).getCustMobNo())){
+//                throw new IllegalArgumentException("Both temporary and permanent mobile numbers are same.");
+//            } else {
+//                if(fetched.get(0).getIsdCode() != isdCode && fetched.get(0).getCustMobNo() != custMobNo || fetched.get(1).getIsdCode() != isdCode  && fetched.get(1).getCustMobNo() != custMobNo){
+//
+//                }
+//            }
+//        }
+//        fetched.setVerifyFlag(VerifyFlag.Y);
+//        cmobRepo.save(fetched);
+//        return List.of(fetched.getIsdCode(), fetched.getCustMobNo(), fetched.getVerifyFlag().toString());
+//    }
 
 //    public Cmob amendCmob(String custNo, String identifier, String newMobile, String newIsd){
 //        private id = {}
