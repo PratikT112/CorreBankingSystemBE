@@ -47,20 +47,25 @@ public class cmobController {
 
 
     @PostMapping("/cmob/new")
-    public ResponseEntity<?> saveCmob(@RequestBody Cmob cmob){
+    public ResponseEntity<?> saveCmob(@RequestBody List<Cmob> cmobList){
         try {
-            Cmob saved = cmobService.saveCmob(cmob);
-            return new ResponseEntity<Cmob>(saved, HttpStatus.OK);
+            List<Cmob> saved = cmobService.saveCmob(cmobList);
+            return new ResponseEntity<List<Cmob>>(saved, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-//    @PutMapping("/cmob/{socNo}/{custNo}/{isdCode}/{custMobNo}/{verifyFlag}")
-//    public ResponseEntity<?> verifyMobile(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo,@PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo, @PathVariable("verifyFlag") String verifyFlag){
-//        List<String> updatedMobileFlag = cmobService.verifyMobile(socNo, custNo, isdCode, custMobNo, verifyFlag);
-//        return new ResponseEntity<List<String>>(updatedMobileFlag, HttpStatus.OK);
-//    }
+    @PutMapping("/cmob/{socNo}/{custNo}/{isdCode}/{custMobNo}/{verifyFlag}")
+    public ResponseEntity<?> verifyMobile(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo,@PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo, @PathVariable("verifyFlag") String verifyFlag){
+        try {
+            Cmob updatedMobileFlag = cmobService.verifyMobile(socNo, custNo, isdCode, custMobNo, verifyFlag);
+            return new ResponseEntity<>(updatedMobileFlag, HttpStatus.OK);
+        } catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
     @GetMapping("/cmob/{socNo}/{custNo}/{isdCode}/{custMobNo}")
     public ResponseEntity<?> findForVerification(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo,@PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo){
@@ -73,10 +78,9 @@ public class cmobController {
         }
     }
 
-
-    @PutMapping("/cmob/{socNo}/{custNo}/{identifier}")
-    public ResponseEntity<?> amendCmob(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo, @PathVariable("identifier") String identifier){
-//        boolean exists = cmobService.amendCmob(socNo, custNo, identifier);
-            return null;
+    @PutMapping("/cmob/amend/{socNo}/{custNo}/{identifier}/{isdCode}/{custMobNo}")
+    public ResponseEntity<?> amendMobileNumber(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo, @PathVariable("identifier") String identifier, @PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo){
+        cmobService.amendMobileNumber(socNo, custNo, identifier, isdCode, custMobNo);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

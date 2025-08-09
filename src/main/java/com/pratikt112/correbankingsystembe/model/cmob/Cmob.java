@@ -47,7 +47,7 @@ public class Cmob implements Serializable {
     @Column(name = "CHNL_ID", length = 5)
     private String chnlId;
 
-    @Column(name = "CHANGE_DATE", length = 9)
+    @Column(name = "CHANGE_DATE", length = 8)
     private String changeDate;
 
     @Column(name = "MAKER_ID", length = 7)
@@ -56,13 +56,20 @@ public class Cmob implements Serializable {
     @Column(name = "CHECKER_ID", length = 7)
     private String checkerId;
 
-    @Column(name = "DOV", length = 1)
+    @Column(name = "DOV", length = 8)
     private String dov;
 
+    @PreUpdate
     @PrePersist
     public void prePersist(){
         if(this.dov == null) {
             this.dov = "0";
+        }
+        if(this.oldCustMobNo == null){
+            this.oldCustMobNo = "            ";
+        }
+        if(this.oldMobIsdCode == null){
+            this.oldMobIsdCode = "   ";
         }
         if(this.makerId == null){
             this.makerId = "       ";
