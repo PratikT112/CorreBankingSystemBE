@@ -43,22 +43,22 @@ public class CmobService {
         return cmobRepo.searchCmobsById(id);
     }
 
-    public List<String> OcomFromCmob(String socNo, String custNo){
+    public List<String> OcomFromCmob(String socNo, String custNo) {
         List<Cmob> mobileNos = cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo);
-        if(mobileNos == null || mobileNos.isEmpty()) return Collections.emptyList();
+        if (mobileNos == null || mobileNos.isEmpty()) return Collections.emptyList();
 
         Cmob selected = null;
-        if(mobileNos.size()==2){
-            selected = mobileNos.get(0).getId().getIdentifier().equals("T")?mobileNos.get(0):mobileNos.get(1);
-            if(!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")){
-                if(List.of("Y","E","S").contains(selected.getVerifyFlag().toString())){
+        if (mobileNos.size() == 2) {
+            selected = mobileNos.get(0).getId().getIdentifier().equals("T") ? mobileNos.get(0) : mobileNos.get(1);
+            if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
+                if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
                     return List.of(selected.getIsdCode(), selected.getCustMobNo());
-                } else if(!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
+                } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
                     return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
                 } else {
-                    selected = mobileNos.get(0).getId().getIdentifier().equals("P")?mobileNos.get(0):mobileNos.get(1);
-                    if(!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")){
-                        if(List.of("Y","E","S").contains(selected.getVerifyFlag().toString())){
+                    selected = mobileNos.get(0).getId().getIdentifier().equals("P") ? mobileNos.get(0) : mobileNos.get(1);
+                    if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
+                        if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
                             return List.of(selected.getIsdCode(), selected.getCustMobNo());
                         } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
                             return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
@@ -68,8 +68,8 @@ public class CmobService {
             }
         } else {
             selected = mobileNos.get(0);
-            if(!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")){
-                if(List.of("Y","E","S").contains(selected.getVerifyFlag().toString())){
+            if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
+                if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
                     return List.of(selected.getIsdCode(), selected.getCustMobNo());
                 } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
                     return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
@@ -79,28 +79,28 @@ public class CmobService {
         return null;
     }
 
-    public List<Cmob> searchCmobByCustNo(String socNo, String custNo){
+    public List<Cmob> searchCmobByCustNo(String socNo, String custNo) {
         return cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo);
     }
 
 
     @Transactional
-    public List<Cmob> saveCmob(List<Cmob> cmobList){
+    public List<Cmob> saveCmob(List<Cmob> cmobList) {
         List<Cmob> savedCmob = new ArrayList<Cmob>();
 
-        if(cmobList.size() == 2){
+        if (cmobList.size() == 2) {
             Cmob first = cmobList.get(0);
             Cmob second = cmobList.get(1);
-            if(first.getId().getIdentifier().equals(second.getId().getIdentifier())){
+            if (first.getId().getIdentifier().equals(second.getId().getIdentifier())) {
                 throw new IllegalArgumentException("Both Mobile Numbers cannot be Permanent/Temporary");
             } else {
-                if(first.getCustMobNo().equals(second.getCustMobNo()) && first.getIsdCode().equals(second.getIsdCode())){
+                if (first.getCustMobNo().equals(second.getCustMobNo()) && first.getIsdCode().equals(second.getIsdCode())) {
                     throw new IllegalArgumentException("Both temporary and permanent mobile numbers cannot be same");
                 } else {
-                    if((first.getOldMobIsdCode()!=null && first.getOldCustMobNo()!=null) || (second.getOldMobIsdCode()!=null && second.getOldCustMobNo()!=null)){
+                    if ((first.getOldMobIsdCode() != null && first.getOldCustMobNo() != null) || (second.getOldMobIsdCode() != null && second.getOldCustMobNo() != null)) {
                         throw new IllegalArgumentException("Old Mobile numbers not applicable during creation.");
-                    } else{
-                        if(first.getVerifyFlag().equals(VerifyFlag.N) && second.getVerifyFlag().equals(VerifyFlag.N)){
+                    } else {
+                        if (first.getVerifyFlag().equals(VerifyFlag.N) && second.getVerifyFlag().equals(VerifyFlag.N)) {
                             savedCmob.add(cmobRepo.save(first));
                             savedCmob.add(cmobRepo.save(second));
                             Mobh mobhFirst = new Mobh(new MobhId(first.getId().getSocNo(), first.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), first.getCustMobNo(), first.getOldCustMobNo(), first.getIsdCode(), first.getMakerId(), first.getCheckerId(), first.getChnlId(), first.getId().getIdentifier(), first.getVerifyFlag().toString());
@@ -117,11 +117,11 @@ public class CmobService {
             }
         } else {
             Cmob theOne = cmobList.getFirst();
-            if(theOne.getId().getIdentifier().equals("P")){
-                if(theOne.getOldMobIsdCode() != null || theOne.getOldCustMobNo() != null){
+            if (theOne.getId().getIdentifier().equals("P")) {
+                if (theOne.getOldMobIsdCode() != null || theOne.getOldCustMobNo() != null) {
                     throw new IllegalArgumentException("Old Mobile number not applicable during creation");
                 } else {
-                    if(theOne.getVerifyFlag().equals(VerifyFlag.N)){
+                    if (theOne.getVerifyFlag().equals(VerifyFlag.N)) {
                         savedCmob.add(cmobRepo.save(theOne));
                         Mobh mobh = new Mobh(new MobhId(theOne.getId().getSocNo(), theOne.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), theOne.getCustMobNo(), theOne.getOldCustMobNo(), theOne.getIsdCode(), theOne.getMakerId(), theOne.getCheckerId(), theOne.getChnlId(), theOne.getId().getIdentifier(), theOne.getVerifyFlag().toString());
                         mobhRepo.save(mobh);
@@ -156,7 +156,7 @@ public class CmobService {
 //        }
 //    }
 
-    public List<Cmob> findForVerification(String socNo, String custNo, String isdCode, String custMobNo){
+    public List<Cmob> findForVerification(String socNo, String custNo, String isdCode, String custMobNo) {
         return cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
     }
 
@@ -165,29 +165,26 @@ public class CmobService {
 
     }
 
-
-//    public List<String> verifyMobile(String socNo, String custNo, String isdCode, String custMobNo, String verifyFlag) {
-//        List<Cmob> fetched = cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
-//        if(fetched == null){
-//            throw new IllegalArgumentException("Record not found.");
-//        }
-//        if(fetched.size() == 2){
-//            if(Objects.equals(fetched.get(0).getIsdCode(), fetched.get(1).getIsdCode()) && Objects.equals(fetched.get(0).getCustMobNo(), fetched.get(1).getCustMobNo())){
-//                throw new IllegalArgumentException("Both temporary and permanent mobile numbers are same.");
-//            } else {
-//                if(fetched.get(0).getIsdCode() != isdCode && fetched.get(0).getCustMobNo() != custMobNo || fetched.get(1).getIsdCode() != isdCode  && fetched.get(1).getCustMobNo() != custMobNo){
-//
-//                }
-//            }
-//        }
-//        fetched.setVerifyFlag(VerifyFlag.Y);
-//        cmobRepo.save(fetched);
-//        return List.of(fetched.getIsdCode(), fetched.getCustMobNo(), fetched.getVerifyFlag().toString());
-//    }
-
-//    public Cmob amendCmob(String custNo, String identifier, String newMobile, String newIsd){
-//        private id = {}
-//        boolean exists = cmobRepo.existsById()
-//    }
-
+    @Transactional
+    public Cmob verifyMobile(String socNo, String custNo, String isdCode, String custMobNo, String verifyFlag) {
+        Cmob toBeVerified = (Cmob) findForVerification(socNo, custNo, isdCode, custMobNo).getFirst();
+        if (toBeVerified == null) {
+            throw new IllegalArgumentException("Record not found for customer and mobile");
+        } else {
+            if (toBeVerified.getVerifyFlag().equals(VerifyFlag.Y)) {
+                throw new IllegalArgumentException("Mobile number is already verified");
+            } else if (toBeVerified.getVerifyFlag().equals(VerifyFlag.S)) {
+                throw new IllegalArgumentException("Verification not applicable for Non Personal Customers");
+            } else if (toBeVerified.getVerifyFlag().equals(VerifyFlag.X)) {
+                throw new IllegalArgumentException("Verification not applicable for Cancelled Mobile Number");
+            } else {
+                toBeVerified.setVerifyFlag(VerifyFlag.Y);
+                toBeVerified.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+                Cmob updatedCmob = cmobRepo.save(toBeVerified);
+                Mobh mobh = new Mobh(new MobhId(updatedCmob.getId().getSocNo(), updatedCmob.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), updatedCmob.getCustMobNo(), updatedCmob.getOldCustMobNo(), updatedCmob.getIsdCode(), updatedCmob.getMakerId(), updatedCmob.getCheckerId(), updatedCmob.getChnlId(), updatedCmob.getId().getIdentifier(), updatedCmob.getVerifyFlag().toString());
+                Mobh addedMobh = mobhRepo.save(mobh);
+                return updatedCmob;
+            }
+        }
+    }
 }
