@@ -73,10 +73,9 @@ public class cmobController {
         }
     }
 
-
-    @PutMapping("/cmob/{socNo}/{custNo}/{identifier}")
-    public ResponseEntity<?> amendCmob(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo, @PathVariable("identifier") String identifier){
-//        boolean exists = cmobService.amendCmob(socNo, custNo, identifier);
-            return null;
+    @PutMapping("/cmob/amend/{socNo}/{custNo}/{identifier}/{isdCode}/{custMobNo}")
+    public ResponseEntity<?> amendMobileNumber(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo, @PathVariable("identifier") String identifier, @PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo){
+        cmobService.amendMobileNumber(socNo, custNo, identifier, isdCode, custMobNo);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

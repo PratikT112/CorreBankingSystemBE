@@ -87,9 +87,10 @@ public class CmobService {
     @Transactional
     public List<Cmob> saveCmob(List<Cmob> cmobList){
         List<Cmob> savedCmob = new ArrayList<Cmob>();
-        Cmob first = cmobList.get(0);
-        Cmob second = cmobList.get(1);
+
         if(cmobList.size() == 2){
+            Cmob first = cmobList.get(0);
+            Cmob second = cmobList.get(1);
             if(first.getId().getIdentifier().equals(second.getId().getIdentifier())){
                 throw new IllegalArgumentException("Both Mobile Numbers cannot be Permanent/Temporary");
             } else {
@@ -157,6 +158,11 @@ public class CmobService {
 
     public List<Cmob> findForVerification(String socNo, String custNo, String isdCode, String custMobNo){
         return cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
+    }
+
+    public List<Cmob> amendMobileNumber(String socNo, String custNo, String identifier, String isdCode, String custMobNo) {
+        return List.of(new Cmob());
+
     }
 
 
