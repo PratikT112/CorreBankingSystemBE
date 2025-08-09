@@ -59,6 +59,7 @@ public class Cmob implements Serializable {
     @Column(name = "DOV", length = 8)
     private String dov;
 
+    @PreUpdate
     @PrePersist
     public void prePersist(){
         if(this.dov == null) {

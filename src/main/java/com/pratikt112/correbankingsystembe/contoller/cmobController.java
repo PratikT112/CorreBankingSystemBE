@@ -58,8 +58,13 @@ public class cmobController {
 
     @PutMapping("/cmob/{socNo}/{custNo}/{isdCode}/{custMobNo}/{verifyFlag}")
     public ResponseEntity<?> verifyMobile(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo,@PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo, @PathVariable("verifyFlag") String verifyFlag){
-        Cmob updatedMobileFlag = cmobService.verifyMobile(socNo, custNo, isdCode, custMobNo, verifyFlag);
-        return new ResponseEntity<>(updatedMobileFlag, HttpStatus.OK);
+        try {
+            Cmob updatedMobileFlag = cmobService.verifyMobile(socNo, custNo, isdCode, custMobNo, verifyFlag);
+            return new ResponseEntity<>(updatedMobileFlag, HttpStatus.OK);
+        } catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @GetMapping("/cmob/{socNo}/{custNo}/{isdCode}/{custMobNo}")
