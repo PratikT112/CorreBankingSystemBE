@@ -209,21 +209,23 @@ public class CmobService {
         Cmob toBeVerified = (Cmob) findForVerification(socNo, custNo, isdCode, custMobNo).getFirst();
         if (toBeVerified == null) {
             throw new IllegalArgumentException("Record not found for customer and mobile");
-        } else {
-            if (toBeVerified.getVerifyFlag().equals(VerifyFlag.Y)) {
-                throw new IllegalArgumentException("Mobile number is already verified");
-            } else if (toBeVerified.getVerifyFlag().equals(VerifyFlag.S)) {
-                throw new IllegalArgumentException("Verification not applicable for Non Personal Customers");
-            } else if (toBeVerified.getVerifyFlag().equals(VerifyFlag.X)) {
-                throw new IllegalArgumentException("Verification not applicable for Cancelled Mobile Number");
-            } else {
-                toBeVerified.setVerifyFlag(VerifyFlag.Y);
-                toBeVerified.setDov(dateUtil.getCurrentDateInDDMMYYYY());
-                Cmob updatedCmob = cmobRepo.save(toBeVerified);
-                Mobh mobh = new Mobh(new MobhId(updatedCmob.getId().getSocNo(), updatedCmob.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), updatedCmob.getCustMobNo(), updatedCmob.getOldCustMobNo(), updatedCmob.getIsdCode(), updatedCmob.getMakerId(), updatedCmob.getCheckerId(), updatedCmob.getChnlId(), updatedCmob.getId().getIdentifier(), updatedCmob.getVerifyFlag().toString());
-                Mobh addedMobh = mobhRepo.save(mobh);
-                return updatedCmob;
-            }
         }
+
+        if (toBeVerified.getVerifyFlag().equals(VerifyFlag.Y)) {
+            throw new IllegalArgumentException("Mobile number is already verified");
+        }
+
+        if (toBeVerified.getVerifyFlag().equals(VerifyFlag.S)) {
+            throw new IllegalArgumentException("Verification not applicable for Non Personal Customers");
+        }
+
+        if (toBeVerified.getVerifyFlag().equals(VerifyFlag.X)) {
+            throw new IllegalArgumentException("Verification not applicable for Cancelled Mobile Number");
+        }
+
+        toBeVerified.setVerifyFlag(VerifyFlag.Y);
+        toBeVerified.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+        return persistCmobAndMobh(List.of(toBeVerified)).get(0);
+
     }
 }
