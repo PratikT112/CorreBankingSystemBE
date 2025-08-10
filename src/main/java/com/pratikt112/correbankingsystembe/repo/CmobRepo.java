@@ -24,4 +24,6 @@ public interface CmobRepo extends JpaRepository<Cmob, CmobId> {
 
     List<Cmob> findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(String socNo, String custNo, String isdCode, String custMobNo);
 
+
+    List<Cmob> id(CmobId id);
 }

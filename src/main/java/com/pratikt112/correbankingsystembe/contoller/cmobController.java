@@ -78,9 +78,14 @@ public class cmobController {
         }
     }
 
-    @PutMapping("/cmob/amend/{socNo}/{custNo}/{identifier}/{isdCode}/{custMobNo}")
-    public ResponseEntity<?> amendMobileNumber(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo, @PathVariable("identifier") String identifier, @PathVariable("isdCode") String isdCode, @PathVariable("custMobNo") String custMobNo){
-        cmobService.amendMobileNumber(socNo, custNo, identifier, isdCode, custMobNo);
-        return new ResponseEntity<>(null, HttpStatus.OK);
+    @PutMapping("/cmob/amend/{socNo}/{custNo}/{identifier}/{newIsdCode}/{newCustMobNo}")
+    public ResponseEntity<?> amendMobileNumber(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo, @PathVariable("identifier") String identifier, @PathVariable("newIsdCode") String newIsdCode, @PathVariable("newCustMobNo") String newCustMobNo){
+        try {
+            Cmob amendedMobile = cmobService.amendMobileNumber(socNo, custNo, identifier, newIsdCode, newCustMobNo);
+            return new ResponseEntity<Cmob>(amendedMobile, HttpStatus.OK);
+        } catch(Exception e){
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
