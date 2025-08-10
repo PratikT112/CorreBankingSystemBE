@@ -217,6 +217,7 @@ public class CmobService {
             toBeAmended.setIsdCode(newIsdCode);
             toBeAmended.setCustMobNo(newCustMobNo);
             toBeAmended.setVerifyFlag(VerifyFlag.N);
+            toBeAmended.setDov("0");
             return (Cmob) persistCmobAndMobh(List.of(toBeAmended)).get(0);
         } catch (IllegalArgumentException e){
             throw e;
