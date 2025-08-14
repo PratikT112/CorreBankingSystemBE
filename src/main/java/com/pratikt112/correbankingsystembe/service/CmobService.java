@@ -1,12 +1,12 @@
 package com.pratikt112.correbankingsystembe.service;
 
 
-import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
 import com.pratikt112.correbankingsystembe.model.mobh.Mobh;
 import com.pratikt112.correbankingsystembe.model.mobh.MobhId;
+import com.pratikt112.correbankingsystembe.repo.ChnlMobVerifyRepo;
 import com.pratikt112.correbankingsystembe.repo.CmobRepo;
 import com.pratikt112.correbankingsystembe.repo.MobhRepo;
 import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
@@ -16,16 +16,16 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class CmobService {
 
     @Autowired
     private CmobRepo cmobRepo;
+
+    @Autowired
+    private ChnlMobVerifyRepo chnlMobVerifyRepo;
 
     @Autowired
     private DateUtilityDDMMYYYY dateUtil;
@@ -85,6 +85,8 @@ public class CmobService {
 
     public List<Cmob> saveTwoCmobEntries(Cmob first, Cmob second){
         validateTwoCmobEntries(first, second);
+        checkChnlMobVerify(first);
+        checkChnlMobVerify(second);
         return persistCmobAndMobh(List.of(first, second));
     }
 
@@ -92,7 +94,22 @@ public class CmobService {
 
     public List<Cmob> saveSingleCmobEntry(Cmob theOne){
         validateSingleCmobEntry(theOne);
+        checkChnlMobVerify(theOne);
         return persistCmobAndMobh(List.of(theOne));
+    }
+
+    private void checkChnlMobVerify(Cmob theOne) {
+        if(Objects.equals(theOne.getChnlId(), " ")){
+            if(chnlMobVerifyRepo.existsById("SPACE")){
+                theOne.setVerifyFlag(VerifyFlag.Y);
+                theOne.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+            }
+        } else {
+            if(chnlMobVerifyRepo.existsById(theOne.getChnlId())){
+                theOne.setVerifyFlag(VerifyFlag.Y);
+                theOne.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+            }
+        }
     }
 
     private void validateTwoCmobEntries(Cmob first, Cmob second) {
@@ -199,9 +216,36 @@ public class CmobService {
         return cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
     }
 
-    public List<Cmob> amendMobileNumber(String socNo, String custNo, String identifier, String isdCode, String custMobNo) {
-        return List.of(new Cmob());
+    @Transactional
+    public Cmob amendMobileNumber(String socNo, String custNo, String identifier, String newIsdCode, String newCustMobNo) {
+        try {
+            if(socNo == null || custNo == null || identifier == null || newIsdCode == null || newCustMobNo == null){
+                throw new IllegalArgumentException("Required Parameters not provided.");
+            }
 
+            Cmob toBeAmended = cmobRepo.findById(new CmobId(socNo, custNo, identifier)).orElseThrow(()-> new IllegalArgumentException("Customer Record not found"));
+            if(Objects.equals(toBeAmended.getIsdCode(), newIsdCode) && Objects.equals(toBeAmended.getCustMobNo(), newCustMobNo)){
+                throw new IllegalArgumentException("Previous and New Mobile numbers cannot be the same");
+            }
+
+            if(!Objects.equals(toBeAmended.getVerifyFlag(), VerifyFlag.Y)){
+                throw new IllegalArgumentException("Previous Mobile number not verified");
+            }
+
+            toBeAmended.setOldMobIsdCode(toBeAmended.getIsdCode());
+            toBeAmended.setOldCustMobNo(toBeAmended.getCustMobNo());
+            toBeAmended.setIsdCode(newIsdCode);
+            toBeAmended.setCustMobNo(newCustMobNo);
+            toBeAmended.setVerifyFlag(VerifyFlag.N);
+            toBeAmended.setDov("0");
+            return (Cmob) persistCmobAndMobh(List.of(toBeAmended)).get(0);
+        } catch (IllegalArgumentException e){
+            throw e;
+        } catch (DataIntegrityViolationException e){
+            throw new RuntimeException("Database constraint violated while updating CMOB or MOBH: " + e.getMostSpecificCause().getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected error while updating CMOB and MOBH", e);
+        }
     }
 
     @Transactional
@@ -209,21 +253,22 @@ public class CmobService {
         Cmob toBeVerified = (Cmob) findForVerification(socNo, custNo, isdCode, custMobNo).getFirst();
         if (toBeVerified == null) {
             throw new IllegalArgumentException("Record not found for customer and mobile");
-        } else {
-            if (toBeVerified.getVerifyFlag().equals(VerifyFlag.Y)) {
-                throw new IllegalArgumentException("Mobile number is already verified");
-            } else if (toBeVerified.getVerifyFlag().equals(VerifyFlag.S)) {
-                throw new IllegalArgumentException("Verification not applicable for Non Personal Customers");
-            } else if (toBeVerified.getVerifyFlag().equals(VerifyFlag.X)) {
-                throw new IllegalArgumentException("Verification not applicable for Cancelled Mobile Number");
-            } else {
-                toBeVerified.setVerifyFlag(VerifyFlag.Y);
-                toBeVerified.setDov(dateUtil.getCurrentDateInDDMMYYYY());
-                Cmob updatedCmob = cmobRepo.save(toBeVerified);
-                Mobh mobh = new Mobh(new MobhId(updatedCmob.getId().getSocNo(), updatedCmob.getId().getCustNo(), dateUtil.getCurrentDateInDDMMYYYY(), timeUtil.getCurrentTimeInHHMMSSSSS()), updatedCmob.getCustMobNo(), updatedCmob.getOldCustMobNo(), updatedCmob.getIsdCode(), updatedCmob.getMakerId(), updatedCmob.getCheckerId(), updatedCmob.getChnlId(), updatedCmob.getId().getIdentifier(), updatedCmob.getVerifyFlag().toString());
-                Mobh addedMobh = mobhRepo.save(mobh);
-                return updatedCmob;
-            }
         }
+
+        if (toBeVerified.getVerifyFlag().equals(VerifyFlag.Y)) {
+            throw new IllegalArgumentException("Mobile number is already verified");
+        }
+
+        if (toBeVerified.getVerifyFlag().equals(VerifyFlag.S)) {
+            throw new IllegalArgumentException("Verification not applicable for Non Personal Customers");
+        }
+
+        if (toBeVerified.getVerifyFlag().equals(VerifyFlag.X)) {
+            throw new IllegalArgumentException("Verification not applicable for Cancelled Mobile Number");
+        }
+
+        toBeVerified.setVerifyFlag(VerifyFlag.Y);
+        toBeVerified.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+        return persistCmobAndMobh(List.of(toBeVerified)).get(0);
     }
 }
