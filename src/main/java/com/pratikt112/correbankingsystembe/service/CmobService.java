@@ -1,13 +1,17 @@
 package com.pratikt112.correbankingsystembe.service;
 
 
+import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
+import com.pratikt112.correbankingsystembe.model.mbex.Mbex;
+import com.pratikt112.correbankingsystembe.model.mbex.MbexId;
 import com.pratikt112.correbankingsystembe.model.mobh.Mobh;
 import com.pratikt112.correbankingsystembe.model.mobh.MobhId;
 import com.pratikt112.correbankingsystembe.repo.ChnlMobVerifyRepo;
 import com.pratikt112.correbankingsystembe.repo.CmobRepo;
+import com.pratikt112.correbankingsystembe.repo.MbexRepo;
 import com.pratikt112.correbankingsystembe.repo.MobhRepo;
 import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
 import com.pratikt112.correbankingsystembe.utility.TimeUtilityHHMMSSmmm;
@@ -35,6 +39,9 @@ public class CmobService {
 
     @Autowired
     private MobhRepo mobhRepo;
+
+    @Autowired
+    private MbexRepo mbexRepo;
 
 //    Cmob test = new Cmob();
 //    test.getId(); // If this gives an error, it's Lombok or import issue
@@ -164,7 +171,15 @@ public class CmobService {
         for (Cmob cmob: cmobList){
             saved.add(cmobRepo.save(cmob));
             mobhRepo.save(createMobhFromCmob(cmob));
+
+            if(Objects.equals(cmob.getId().getIdentifier(), Identifier.T.toString()) && cmob.getMbexExpDt() != null){
+                Mbex mbex = new Mbex(new MbexId(cmob.getId().getSocNo(), cmob.getId().getCustNo()), cmob.getMbexExpDt());
+                mbexRepo.save(mbex);
+            }
+
+
         }
+
         return saved;
     }
 

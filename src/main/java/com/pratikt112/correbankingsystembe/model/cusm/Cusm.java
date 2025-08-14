@@ -29,7 +29,7 @@ public class Cusm implements Serializable {
     @Column(name = "NOTICE_IND", length = 1)
     private String noticeInd;
 
-    @Column(name = "CUSTOMER_TYPE", length = 2)
+    @Column(name = "CUSTOMER_TYPE", length = 2, nullable = false)
     private String customerType;
 
     @Column(name = "MAIL_IND_EXP_DT", length = 8)
@@ -44,22 +44,22 @@ public class Cusm implements Serializable {
     @Column(name = "LAST_USED_ACCT_NO", length = 17)
     private String lastUsedAcctNo;
 
-    @Column(name = "CUSTOMER_STATUS", length = 3)
+    @Column(name = "CUSTOMER_STATUS", length = 3, nullable = false)
     private String customerStatus;
 
     @Column(name = "SEGMENT_CODE", length = 4)
     private String segmentCode;
 
-    @Column(name = "CREATE_DT", length = 8)
+    @Column(name = "CREATE_DT", length = 8, nullable = false)
     private String createDt;
 
-    @Column(name = "HOME_BRANCH_NO", length = 5)
+    @Column(name = "HOME_BRANCH_NO", length = 5, nullable = false)
     private String homeBranchNo;
 
     @Column(name = "COUNTRY_OF_RISK", length = 2)
     private String countryOfRisk;
 
-    @Column(name = "TIER_CUST_TYPE", length = 8)
+    @Column(name = "TIER_CUST_TYPE", length = 8, nullable = false)
     private String tierCustType;
 
     @Column(name = "MISLA_ORG_CODE", length = 3)
