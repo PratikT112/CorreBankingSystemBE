@@ -129,6 +129,10 @@ public class CmobService {
             throw new IllegalArgumentException("Both Mobile Numbers should be provided for the same customer");
         }
 
+        if(first.getMbexExpDt()==null){
+            throw new IllegalArgumentException("Expiry date is needed for Temporary mobile number");
+        }
+
         if(first.getId().getIdentifier().equals(second.getId().getIdentifier())){
             throw new IllegalArgumentException("Both Mobile Numbers cannot be Permanent/Temporary");
         }
@@ -208,8 +212,16 @@ public class CmobService {
         try{
             List<Cmob> savedCmob = new ArrayList<Cmob>();
             if (cmobList.size() == 2) {
-                Cmob first = cmobList.get(0);
-                Cmob second = cmobList.get(1);
+                Cmob first;
+                Cmob second;
+                if (Objects.equals(cmobList.get(0).getId().getIdentifier(), Identifier.T.toString())) {
+                    first = cmobList.get(0);
+                    second = cmobList.get(1);
+                } else {
+                    first = cmobList.get(1);
+                    second = cmobList.get(0);
+                }
+
                 return saveTwoCmobEntries(first, second);
             } else if(cmobList.size() == 1){
                 Cmob theOne = cmobList.get(0);
