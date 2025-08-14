@@ -85,6 +85,8 @@ public class CmobService {
 
     public List<Cmob> saveTwoCmobEntries(Cmob first, Cmob second){
         validateTwoCmobEntries(first, second);
+        checkChnlMobVerify(first);
+        checkChnlMobVerify(second);
         return persistCmobAndMobh(List.of(first, second));
     }
 
