@@ -88,5 +88,77 @@ public class Cusm implements Serializable {
 
     @Column(name = "POST_CHECKER_ID", length = 7)
     private String postCheckerId;
+
+
+    @PrePersist
+    public void prePersist() {
+        if (this.primAcct == null) {
+            this.primAcct = " ";
+        }
+        if (this.thisAcctStatus == null) {
+            this.thisAcctStatus = " ";
+        }
+        if (this.mailInd == null) {
+            this.mailInd = " ";
+        }
+        if (this.noticeInd == null) {
+            this.noticeInd = " ";
+        }
+
+        if (this.mailIndExpDt == null) {
+            this.mailIndExpDt = "0";
+        }
+        if (this.domesticRisk == null) {
+            this.domesticRisk = "  ";
+        }
+        if (this.crossBorderRisk == null) {
+            this.crossBorderRisk = "  ";
+        }
+        if (this.customerStatus == null) {
+            this.customerStatus = "000";
+        }
+        if (this.segmentCode == null) {
+            this.segmentCode = "    ";
+        }
+        if (this.createDt == null) {
+            this.createDt = "0";
+        }
+        if (this.homeBranchNo == null) {
+            this.homeBranchNo = "     ";
+        }
+        if (this.countryOfRisk == null) {
+            this.countryOfRisk = "  ";
+        }
+        if (this.tierCustType == null) {
+            this.tierCustType = "        ";
+        }
+        if (this.mislaOrgCode == null) {
+            this.mislaOrgCode = "   ";
+        }
+        if (this.bsrOrgCode == null) {
+            this.bsrOrgCode = "   ";
+        }
+        if (this.resiStatus == null) {
+            this.resiStatus = " ";
+        }
+        if (this.lastStatChgDt == null) {
+            this.lastStatChgDt = "0";
+        }
+        if (this.deliveryMode == null) {
+            this.deliveryMode = "  ";
+        }
+        if (this.custTaxPan == null) {
+            this.custTaxPan = "          ";
+        }
+        if (this.custVoterId == null) {
+            this.custVoterId = "          ";
+        }
+        if (this.custEvalFlag == null) {
+            this.custEvalFlag = " ";
+        }
+        if (this.postCheckerId == null) {
+            this.postCheckerId = "       ";
+        }
+    }
 }
 
