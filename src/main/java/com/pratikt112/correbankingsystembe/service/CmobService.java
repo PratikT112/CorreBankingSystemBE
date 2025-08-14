@@ -1,12 +1,12 @@
 package com.pratikt112.correbankingsystembe.service;
 
 
-import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
 import com.pratikt112.correbankingsystembe.model.mobh.Mobh;
 import com.pratikt112.correbankingsystembe.model.mobh.MobhId;
+import com.pratikt112.correbankingsystembe.repo.ChnlMobVerifyRepo;
 import com.pratikt112.correbankingsystembe.repo.CmobRepo;
 import com.pratikt112.correbankingsystembe.repo.MobhRepo;
 import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
@@ -23,6 +23,9 @@ public class CmobService {
 
     @Autowired
     private CmobRepo cmobRepo;
+
+    @Autowired
+    private ChnlMobVerifyRepo chnlMobVerifyRepo;
 
     @Autowired
     private DateUtilityDDMMYYYY dateUtil;
@@ -89,7 +92,22 @@ public class CmobService {
 
     public List<Cmob> saveSingleCmobEntry(Cmob theOne){
         validateSingleCmobEntry(theOne);
+        checkChnlMobVerify(theOne);
         return persistCmobAndMobh(List.of(theOne));
+    }
+
+    private void checkChnlMobVerify(Cmob theOne) {
+        if(Objects.equals(theOne.getChnlId(), " ")){
+            if(chnlMobVerifyRepo.existsById("SPACE")){
+                theOne.setVerifyFlag(VerifyFlag.Y);
+                theOne.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+            }
+        } else {
+            if(chnlMobVerifyRepo.existsById(theOne.getChnlId())){
+                theOne.setVerifyFlag(VerifyFlag.Y);
+                theOne.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+            }
+        }
     }
 
     private void validateTwoCmobEntries(Cmob first, Cmob second) {

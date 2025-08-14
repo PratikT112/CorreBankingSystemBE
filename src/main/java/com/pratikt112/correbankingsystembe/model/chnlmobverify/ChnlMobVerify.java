@@ -1,4 +1,4 @@
-package com.pratikt112.correbankingsystembe.model.chnlmobverify.;
+package com.pratikt112.correbankingsystembe.model.chnlmobverify;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChnlMobVerify {
 
-    @Column(name = "BT", length = 1)
+    @Id
+    @Column(name = "BT", length = 5)
     private String bt;
 
 }
