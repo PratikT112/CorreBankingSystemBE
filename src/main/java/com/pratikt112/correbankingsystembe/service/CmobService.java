@@ -1,13 +1,17 @@
 package com.pratikt112.correbankingsystembe.service;
 
 
+import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
+import com.pratikt112.correbankingsystembe.model.mbex.Mbex;
+import com.pratikt112.correbankingsystembe.model.mbex.MbexId;
 import com.pratikt112.correbankingsystembe.model.mobh.Mobh;
 import com.pratikt112.correbankingsystembe.model.mobh.MobhId;
 import com.pratikt112.correbankingsystembe.repo.ChnlMobVerifyRepo;
 import com.pratikt112.correbankingsystembe.repo.CmobRepo;
+import com.pratikt112.correbankingsystembe.repo.MbexRepo;
 import com.pratikt112.correbankingsystembe.repo.MobhRepo;
 import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
 import com.pratikt112.correbankingsystembe.utility.TimeUtilityHHMMSSmmm;
@@ -35,6 +39,9 @@ public class CmobService {
 
     @Autowired
     private MobhRepo mobhRepo;
+
+    @Autowired
+    private MbexRepo mbexRepo;
 
 //    Cmob test = new Cmob();
 //    test.getId(); // If this gives an error, it's Lombok or import issue
@@ -122,6 +129,10 @@ public class CmobService {
             throw new IllegalArgumentException("Both Mobile Numbers should be provided for the same customer");
         }
 
+        if(first.getMbexExpDt()==null){
+            throw new IllegalArgumentException("Expiry date is needed for Temporary mobile number");
+        }
+
         if(first.getId().getIdentifier().equals(second.getId().getIdentifier())){
             throw new IllegalArgumentException("Both Mobile Numbers cannot be Permanent/Temporary");
         }
@@ -164,7 +175,15 @@ public class CmobService {
         for (Cmob cmob: cmobList){
             saved.add(cmobRepo.save(cmob));
             mobhRepo.save(createMobhFromCmob(cmob));
+
+            if(Objects.equals(cmob.getId().getIdentifier(), Identifier.T.toString()) && cmob.getMbexExpDt() != null){
+                Mbex mbex = new Mbex(new MbexId(cmob.getId().getSocNo(), cmob.getId().getCustNo()), cmob.getMbexExpDt());
+                mbexRepo.save(mbex);
+            }
+
+
         }
+
         return saved;
     }
 
@@ -193,8 +212,16 @@ public class CmobService {
         try{
             List<Cmob> savedCmob = new ArrayList<Cmob>();
             if (cmobList.size() == 2) {
-                Cmob first = cmobList.get(0);
-                Cmob second = cmobList.get(1);
+                Cmob first;
+                Cmob second;
+                if (Objects.equals(cmobList.get(0).getId().getIdentifier(), Identifier.T.toString())) {
+                    first = cmobList.get(0);
+                    second = cmobList.get(1);
+                } else {
+                    first = cmobList.get(1);
+                    second = cmobList.get(0);
+                }
+
                 return saveTwoCmobEntries(first, second);
             } else if(cmobList.size() == 1){
                 Cmob theOne = cmobList.get(0);

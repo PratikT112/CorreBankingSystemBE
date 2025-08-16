@@ -25,6 +25,9 @@ import java.io.Serializable;
 
 public class Cmob implements Serializable {
 
+    @Transient
+    private String mbexExpDt;
+
     @EmbeddedId
     private CmobId id;
 
