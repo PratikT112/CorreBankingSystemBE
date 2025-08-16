@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @Configuration
 public class JacksonConfig {
-    public static class EmptyStringtoNullDeserializer extends JsonDeserializer<String>{
+    public static class EmptyStringToNullDeserializer extends JsonDeserializer<String>{
 
         @Override
         public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
@@ -27,7 +27,7 @@ public class JacksonConfig {
     public ObjectMapper objectMapper(){
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(String.class, new EmptyStringtoNullDeserializer());
+        module.addDeserializer(String.class, new EmptyStringToNullDeserializer());
         mapper.registerModule(module);
         return mapper;
     }
