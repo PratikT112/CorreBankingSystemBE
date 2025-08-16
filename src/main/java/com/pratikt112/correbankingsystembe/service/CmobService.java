@@ -13,6 +13,7 @@ import com.pratikt112.correbankingsystembe.repo.ChnlMobVerifyRepo;
 import com.pratikt112.correbankingsystembe.repo.CmobRepo;
 import com.pratikt112.correbankingsystembe.repo.MbexRepo;
 import com.pratikt112.correbankingsystembe.repo.MobhRepo;
+import com.pratikt112.correbankingsystembe.utility.DateConverter;
 import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
 import com.pratikt112.correbankingsystembe.utility.TimeUtilityHHMMSSmmm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class CmobService {
 
     @Autowired
     private MbexRepo mbexRepo;
+
+    @Autowired
+    private DateConverter dateConverter;
 
 //    Cmob test = new Cmob();
 //    test.getId(); // If this gives an error, it's Lombok or import issue
