@@ -63,27 +63,30 @@ public class CmobService {
             selected = mobileNos.get(0).getId().getIdentifier().equals("T") ? mobileNos.get(0) : mobileNos.get(1);
             if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
                 if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
-                    return List.of(selected.getIsdCode(), selected.getCustMobNo());
-                } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
-                    return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
-                } else {
-                    selected = mobileNos.get(0).getId().getIdentifier().equals("P") ? mobileNos.get(0) : mobileNos.get(1);
-                    if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
-                        if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
-                            return List.of(selected.getIsdCode(), selected.getCustMobNo());
-                        } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
-                            return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+                    String mbexExpDt = mbexRepo.getMobExpDtById(new MbexId(selected.getId().getSocNo(), selected.getId().getCustNo())).orElseThrow(() -> new IllegalArgumentException("No expiry date found for temporary mobile"));
+                    if (DateConverter.compareDate(mbexExpDt, dateUtil.getCurrentDateInDDMMYYYY()) > 0) {
+                        return List.of(selected.getIsdCode(), selected.getCustMobNo());
+                    } else if (!selected.getOldCustMobNo().trim().isEmpty() && !selected.getOldMobIsdCode().trim().isEmpty()) {
+                        return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+                    } else {
+                        selected = mobileNos.get(0).getId().getIdentifier().equals("P") ? mobileNos.get(0) : mobileNos.get(1);
+                        if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
+                            if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
+                                return List.of(selected.getIsdCode(), selected.getCustMobNo());
+                            } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
+                                return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+                            }
                         }
                     }
                 }
-            }
-        } else {
-            selected = mobileNos.get(0);
-            if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
-                if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
-                    return List.of(selected.getIsdCode(), selected.getCustMobNo());
-                } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
-                    return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+            } else {
+                selected = mobileNos.get(0);
+                if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
+                    if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
+                        return List.of(selected.getIsdCode(), selected.getCustMobNo());
+                    } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
+                        return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+                    }
                 }
             }
         }
