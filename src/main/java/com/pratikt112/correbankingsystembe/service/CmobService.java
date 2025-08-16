@@ -54,47 +54,117 @@ public class CmobService {
         return cmobRepo.searchCmobsById(id);
     }
 
-    public List<String> OcomFromCmob(String socNo, String custNo) {
-        List<Cmob> mobileNos = cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo);
-        if (mobileNos == null || mobileNos.isEmpty()) return Collections.emptyList();
+//    public List<String> OcomFromCmob(String socNo, String custNo) {
+//        List<Cmob> mobileNos = cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo);
+//        if (mobileNos == null || mobileNos.isEmpty()) return Collections.emptyList();
+//
+//        Cmob selected = null;
+//        if (mobileNos.size() == 2) {
+//            selected = mobileNos.get(0).getId().getIdentifier().equals("T") ? mobileNos.get(0) : mobileNos.get(1);
+//            if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
+//                if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
+//                    String mbexExpDt = mbexRepo.getMobExpDtById(new MbexId(selected.getId().getSocNo(), selected.getId().getCustNo())).orElseThrow(() -> new IllegalArgumentException("No expiry date found for temporary mobile"));
+//                    if (DateConverter.compareDate(mbexExpDt, dateUtil.getCurrentDateInDDMMYYYY()) > 0) {
+//                        return List.of(selected.getIsdCode(), selected.getCustMobNo());
+//                    } else if (!selected.getOldCustMobNo().trim().isEmpty() && !selected.getOldMobIsdCode().trim().isEmpty()) {
+//                        return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+//                    } else {
+//                        selected = mobileNos.get(0).getId().getIdentifier().equals("P") ? mobileNos.get(0) : mobileNos.get(1);
+//                        if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
+//                            if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
+//                                return List.of(selected.getIsdCode(), selected.getCustMobNo());
+//                            } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
+//                                return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+//                            }
+//                        }
+//                    }
+//                }
+//            } else {
+//                selected = mobileNos.get(0);
+//                if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
+//                    if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
+//                        return List.of(selected.getIsdCode(), selected.getCustMobNo());
+//                    } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
+//                        return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+//                    }
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
-        Cmob selected = null;
-        if (mobileNos.size() == 2) {
-            selected = mobileNos.get(0).getId().getIdentifier().equals("T") ? mobileNos.get(0) : mobileNos.get(1);
-            if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
-                if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
-                    String mbexExpDt = mbexRepo.getMobExpDtById(new MbexId(selected.getId().getSocNo(), selected.getId().getCustNo())).orElseThrow(() -> new IllegalArgumentException("No expiry date found for temporary mobile"));
-                    if (DateConverter.compareDate(mbexExpDt, dateUtil.getCurrentDateInDDMMYYYY()) > 0) {
-                        return List.of(selected.getIsdCode(), selected.getCustMobNo());
-                    } else if (!selected.getOldCustMobNo().trim().isEmpty() && !selected.getOldMobIsdCode().trim().isEmpty()) {
-                        return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
-                    } else {
-                        selected = mobileNos.get(0).getId().getIdentifier().equals("P") ? mobileNos.get(0) : mobileNos.get(1);
-                        if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
-                            if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
-                                return List.of(selected.getIsdCode(), selected.getCustMobNo());
-                            } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
-                                return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
-                            }
-                        }
+    public List<String> OcomFromCmob(String socNo, String custNo){
+        List<Cmob> mobileNos = cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo).orElseThrow(()->new IllegalArgumentException("No customer record found"));
+        if(mobileNos.size() == 1){
+            return tryPermanent(mobileNos);
+        } else if (mobileNos.size() == 2){
+            Cmob selected = pickByIdentifier(mobileNos, "T");
+            if(isValidNumber(selected)){
+                if(isVerified(selected)){
+                    if(isTempMobileValid(selected)){
+                        return currMobileAsList(selected);
                     }
-                }
-            } else {
-                selected = mobileNos.get(0);
-                if (!selected.getCustMobNo().equals(" ") && !selected.getIsdCode().equals(" ")) {
-                    if (List.of("Y", "E", "S").contains(selected.getVerifyFlag().toString())) {
-                        return List.of(selected.getIsdCode(), selected.getCustMobNo());
-                    } else if (!selected.getOldCustMobNo().equals(" ") && !selected.getOldMobIsdCode().equals(" ")) {
-                        return List.of(selected.getOldMobIsdCode(), selected.getOldCustMobNo());
+                    if(hasOldNumber(selected)){
+                        return oldMobileAsList(selected);
                     }
+                    return tryPermanent(mobileNos);
                 }
             }
         }
         return null;
     }
 
+    private Cmob pickByIdentifier(List<Cmob> mobiles, String identifier){
+        return mobiles.get(0).getId().getIdentifier().equals(identifier)
+                ? mobiles.get(0)
+                : mobiles.get(1);
+    }
+
+    private boolean isValidNumber(Cmob cmob){
+        return cmob != null
+                && !cmob.getCustMobNo().trim().isEmpty()
+                && !cmob.getIsdCode().trim().isEmpty();
+    }
+
+
+    private boolean isVerified(Cmob cmob){
+        return List.of("Y","E","S").contains(cmob.getVerifyFlag().toString());
+    }
+
+    private boolean isTempMobileValid(Cmob cmob){
+        String mbexExpDt = mbexRepo.getMobExpDtById(new MbexId(cmob.getId().getSocNo(), cmob.getId().getCustNo()))
+                .orElseThrow(()->new IllegalArgumentException("No expiry date found for temporary mobile"));
+        return DateConverter.compareDate(mbexExpDt, dateUtil.getCurrentDateInDDMMYYYY()) > 0;
+    }
+
+    private boolean hasOldNumber(Cmob cmob){
+        return !cmob.getOldMobIsdCode().trim().isEmpty()
+                && !cmob.getOldCustMobNo().trim().isEmpty();
+    }
+
+    private List<String> currMobileAsList(Cmob cmob){
+        return List.of(cmob.getIsdCode(), cmob.getCustMobNo());
+    }
+
+    private List<String> oldMobileAsList(Cmob cmob){
+        return List.of(cmob.getOldMobIsdCode(), cmob.getOldCustMobNo());
+    }
+
+    private List<String> tryPermanent(List<Cmob> mobileNos){
+        Cmob permanent = pickByIdentifier(mobileNos, "P");
+        if(isValidNumber(permanent)){
+            if(isVerified(permanent)){
+                return currMobileAsList(permanent);
+            }
+            if(hasOldNumber(permanent)){
+                return oldMobileAsList(permanent);
+            }
+        }
+        return null;
+    }
+
     public List<Cmob> searchCmobByCustNo(String socNo, String custNo) {
-        return cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo);
+        return cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo).orElseThrow(()->new IllegalArgumentException("No customer record found"));
     }
 
     public List<Cmob> saveTwoCmobEntries(Cmob first, Cmob second){
