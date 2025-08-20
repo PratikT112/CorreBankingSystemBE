@@ -2,6 +2,7 @@ package com.pratikt112.correbankingsystembe.model.cmob;
 
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
+import com.pratikt112.correbankingsystembe.utility.DdMmYyyyStringToLocalDateConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -50,8 +52,9 @@ public class Cmob implements Serializable {
     @Column(name = "CHNL_ID", length = 5)
     private String chnlId;
 
+    @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
     @Column(name = "CHANGE_DATE", length = 8)
-    private String changeDate;
+    private LocalDate changeDate;
 
     @Column(name = "MAKER_ID", length = 7)
     private String makerId;
@@ -60,14 +63,17 @@ public class Cmob implements Serializable {
     private String checkerId;
 
     @Column(name = "DOV", length = 8)
-    private String dov;
+    @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
+    private LocalDate dov;
 
     @PreUpdate
     @PrePersist
     public void prePersist(){
+        /* Removed post implementation of DdMmYyyyStringToLocalDateConverter
         if(this.dov == null) {
             this.dov = "0";
         }
+         */
         if(this.oldCustMobNo == null){
             this.oldCustMobNo = "            ";
         }

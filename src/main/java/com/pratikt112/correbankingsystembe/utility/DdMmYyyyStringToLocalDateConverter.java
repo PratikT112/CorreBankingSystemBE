@@ -13,7 +13,7 @@ public class DdMmYyyyStringToLocalDateConverter implements AttributeConverter<Lo
     @Override
     public String convertToDatabaseColumn(LocalDate localDate) {
         if(localDate == null){
-            return null;
+            return "        "; // return spaces in db date, no need in pre-persist function
         }
         return localDate.format(FORMATTER);
     }

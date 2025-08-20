@@ -1,13 +1,16 @@
 package com.pratikt112.correbankingsystembe.model.cusvdd;
 
+import com.pratikt112.correbankingsystembe.enums.Gender;
 import com.pratikt112.correbankingsystembe.utility.DdMmYyyyStringToLocalDateConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 
 @Data
@@ -25,7 +28,11 @@ public class Cusvdd {
 
     @Column(name = "BIRTH_DATE_1", length = 8)
     @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
-    private String birthDate1;
+    private LocalDate birthDate1;
+
+    @Column(name = "DEATH_DATE", length = 8)
+    @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
+    private LocalDate deathDate;
 
     @Column(name = "SEX_CODE", length = 1)
     private String sexCode;
@@ -51,7 +58,4 @@ public class Cusvdd {
     @Column(name = "THRE_LIM", precision = 14, scale = 0)
     @Digits(integer = 14, fraction = 0, message = "Threshold Limit must be between of maximum 14 digits")
     private BigDecimal threLim;
-
-    @Column(name = "COMP_CODE", length = 6)
-    private String compCode;
 }
