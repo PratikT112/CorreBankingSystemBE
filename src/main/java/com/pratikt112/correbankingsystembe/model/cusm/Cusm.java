@@ -1,11 +1,13 @@
 package com.pratikt112.correbankingsystembe.model.cusm;
 
+import com.pratikt112.correbankingsystembe.utility.DdMmYyyyStringToLocalDateConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -51,7 +53,8 @@ public class Cusm implements Serializable {
     private String segmentCode;
 
     @Column(name = "CREATE_DT", length = 8, nullable = false)
-    private String createDt;
+    @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
+    private LocalDate createDt;
 
     @Column(name = "HOME_BRANCH_NO", length = 5, nullable = false)
     private String homeBranchNo;
