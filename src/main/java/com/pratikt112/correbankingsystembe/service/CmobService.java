@@ -20,6 +20,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -109,12 +110,12 @@ public class CmobService {
         if(Objects.equals(theOne.getChnlId(), " ")){
             if(chnlMobVerifyRepo.existsById("SPACE")){
                 theOne.setVerifyFlag(VerifyFlag.Y);
-                theOne.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+                theOne.setDov(LocalDate.now());
             }
         } else {
             if(chnlMobVerifyRepo.existsById(theOne.getChnlId())){
                 theOne.setVerifyFlag(VerifyFlag.Y);
-                theOne.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+                theOne.setDov(LocalDate.now());
             }
         }
     }
@@ -180,8 +181,6 @@ public class CmobService {
                 Mbex mbex = new Mbex(new MbexId(cmob.getId().getSocNo(), cmob.getId().getCustNo()), cmob.getMbexExpDt());
                 mbexRepo.save(mbex);
             }
-
-
         }
 
         return saved;
@@ -264,7 +263,7 @@ public class CmobService {
             toBeAmended.setIsdCode(newIsdCode);
             toBeAmended.setCustMobNo(newCustMobNo);
             toBeAmended.setVerifyFlag(VerifyFlag.N);
-            toBeAmended.setDov("0");
+            toBeAmended.setDov(null);
             return (Cmob) persistCmobAndMobh(List.of(toBeAmended)).get(0);
         } catch (IllegalArgumentException e){
             throw e;
@@ -295,7 +294,7 @@ public class CmobService {
         }
 
         toBeVerified.setVerifyFlag(VerifyFlag.Y);
-        toBeVerified.setDov(dateUtil.getCurrentDateInDDMMYYYY());
+        toBeVerified.setDov(LocalDate.now());
         return persistCmobAndMobh(List.of(toBeVerified)).get(0);
     }
 }

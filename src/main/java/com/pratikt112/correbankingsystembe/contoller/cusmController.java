@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 public class cusmController {
-    @Autowired
-    private CusmService cusmService;
+//    @Autowired
+//    private CusmService cusmService;
 }

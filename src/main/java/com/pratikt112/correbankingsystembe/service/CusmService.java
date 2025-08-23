@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CusmService {
-    @Autowired
-    private CusmRepo cusmRepo;
+//    @Autowired
+//    private CusmRepo cusmRepo;
 
 
 }
