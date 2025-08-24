@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class Cusm implements Serializable {
 
     @EmbeddedId
-    private CusmId id;
+    private CusId id;
 
     @Column(name = "PRIM_ACCT", length = 17)
     private String primAcct;
