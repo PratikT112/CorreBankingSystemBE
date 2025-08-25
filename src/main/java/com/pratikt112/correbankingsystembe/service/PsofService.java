@@ -89,6 +89,8 @@ public class PsofService {
 
 
     public Psof persistPsof(Psof psof){
-        return psofRepo.save(psof);
+        Psof saved = psofRepo.save(psof);
+        psofRepo.flush();
+        return psofRepo.findById(saved.getPsofId()).orElseThrow();
     }
 }
