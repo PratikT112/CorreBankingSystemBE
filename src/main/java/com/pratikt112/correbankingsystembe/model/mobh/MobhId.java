@@ -1,12 +1,15 @@
 package com.pratikt112.correbankingsystembe.model.mobh;
 
+import com.pratikt112.correbankingsystembe.utility.DdMmYyyyStringToLocalDateConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +24,8 @@ public class MobhId implements Serializable {
     private String custNo;
 
     @Column(name = "CHANGE_DT", length = 8, nullable = false)
-    private String changeDt;
+    @Convert(converter = DdMmYyyyStringToLocalDateConverter.class )
+    private LocalDate changeDt;
 
     @Column(name = "CHANGE_TIME", length = 9, nullable = false)
     private String changeTime;

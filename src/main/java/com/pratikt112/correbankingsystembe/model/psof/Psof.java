@@ -20,6 +20,9 @@ public class Psof implements Serializable {
     @EmbeddedId
     private PsofId psofId;
 
+    @Transient
+    private String customerType;
+
 
     @Column(name = "SOURCE_FUNDS", length = 2, nullable = false)
     private String sourceFunds;

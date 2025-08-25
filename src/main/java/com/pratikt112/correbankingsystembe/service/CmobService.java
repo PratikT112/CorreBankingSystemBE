@@ -191,7 +191,7 @@ public class CmobService {
                 new MobhId(
                         cmob.getId().getSocNo(),
                         cmob.getId().getCustNo(),
-                        dateUtil.getCurrentDateInDDMMYYYY(),
+                        LocalDate.now(),
                         timeUtil.getCurrentTimeInHHMMSSSSS()
                 ),
                 cmob.getCustMobNo(),

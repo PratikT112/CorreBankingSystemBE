@@ -35,7 +35,8 @@ public class Cusm implements Serializable {
     private String customerType;
 
     @Column(name = "MAIL_IND_EXP_DT", length = 8)
-    private String mailIndExpDt;
+    @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
+    private LocalDate mailIndExpDt;
 
     @Column(name = "DOMESTIC_RISK", length = 2)
     private String domesticRisk;
@@ -75,7 +76,8 @@ public class Cusm implements Serializable {
     private String resiStatus;
 
     @Column(name = "LAST_STAT_CHG_DT", length = 8)
-    private String lastStatChgDt;
+    @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
+    private LocalDate lastStatChgDt;
 
     @Column(name = "DELIVERY_MODE", length = 2)
     private String deliveryMode;
@@ -107,10 +109,6 @@ public class Cusm implements Serializable {
         if (this.noticeInd == null) {
             this.noticeInd = " ";
         }
-
-        if (this.mailIndExpDt == null) {
-            this.mailIndExpDt = "0";
-        }
         if (this.domesticRisk == null) {
             this.domesticRisk = "  ";
         }
@@ -122,9 +120,6 @@ public class Cusm implements Serializable {
         }
         if (this.segmentCode == null) {
             this.segmentCode = "    ";
-        }
-        if (this.createDt == null) {
-            this.createDt = "0";
         }
         if (this.homeBranchNo == null) {
             this.homeBranchNo = "     ";
@@ -143,9 +138,6 @@ public class Cusm implements Serializable {
         }
         if (this.resiStatus == null) {
             this.resiStatus = " ";
-        }
-        if (this.lastStatChgDt == null) {
-            this.lastStatChgDt = "0";
         }
         if (this.deliveryMode == null) {
             this.deliveryMode = "  ";
