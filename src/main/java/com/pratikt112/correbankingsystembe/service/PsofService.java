@@ -25,7 +25,7 @@ public class PsofService {
             throw new IllegalArgumentException("Record Not Found");
         }
         try{
-            validatePsof(psofNew);
+            validateAmendPsof(psofNew);
             return persistPsof(psofNew);
         } catch (IllegalArgumentException e){
             throw e;
@@ -70,6 +70,23 @@ public class PsofService {
             throw new IllegalArgumentException("Only current date allowed");
         }
     }
+
+    private void validateAmendPsof(Psof psofNew) {
+
+        if(Objects.equals(psofNew.getCustomerType(), "01")){
+            if(!List.of("01","02","03","04","05","06").contains(psofNew.getSourceFunds())){
+                throw new IllegalArgumentException("Invalid Source of Funds for Customer Type");
+            }
+        } else if(Objects.equals(psofNew.getCustomerType(), "02")){
+            if(!List.of("01","02","03","04","05").contains(psofNew.getSourceFunds())){
+                throw new IllegalArgumentException("Invalid Source of Funds for Customer Type");
+            }
+        }
+        if(!psofNew.getCreateDate().equals(LocalDate.now())){
+            throw new IllegalArgumentException("Only current date allowed");
+        }
+    }
+
 
     public Psof persistPsof(Psof psof){
         return psofRepo.save(psof);
