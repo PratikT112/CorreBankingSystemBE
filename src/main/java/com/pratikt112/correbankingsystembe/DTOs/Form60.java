@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Form60 {
-    private String subDate;
+    private LocalDate subDate;
     private LocalDate tranDate;
     private BigDecimal agriIncome;
     private BigDecimal otherIncome;
