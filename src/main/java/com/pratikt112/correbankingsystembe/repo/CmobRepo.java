@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CmobRepo extends JpaRepository<Cmob, CmobId> {
@@ -20,7 +21,7 @@ public interface CmobRepo extends JpaRepository<Cmob, CmobId> {
 
     List<Cmob> searchCmobsById(CmobId id);
 
-    List<Cmob> findByIdSocNoAndIdCustNo(String socNo, String custNo);
+    Optional<List<Cmob>> findByIdSocNoAndIdCustNo(String socNo, String custNo);
 
     List<Cmob> findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(String socNo, String custNo, String isdCode, String custMobNo);
 
