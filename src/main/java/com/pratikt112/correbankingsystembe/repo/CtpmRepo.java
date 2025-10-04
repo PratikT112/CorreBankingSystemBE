@@ -11,4 +11,5 @@ public interface CtpmRepo extends JpaRepository<Ctpm,Integer> {
     @Query("SELECT c.docReqd FROM Ctpm c WHERE c.tieredCust = :tieredCust")
     String getDocReqdByTieredCust(String tieredCust);
 
+    Ctpm getCtpmByTieredCust(String tieredCust);
 }
