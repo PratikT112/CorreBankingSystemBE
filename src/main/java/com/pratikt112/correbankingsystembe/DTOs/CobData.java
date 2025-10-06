@@ -15,6 +15,7 @@ public class CobData {
     private LocalDate regionDate;
     // Personal
     private String custTierType;
+    private String resiStatus;
     private PersonName custNameMain;
     private PersonName custNameMaiden;
     private LocalDate custDob;

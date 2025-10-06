@@ -17,7 +17,7 @@ public class Cr60Service {
     Cr60Repo cr60Repo;
 
     @Autowired
-    SystemDateProvider systemDateProvider
+    SystemDateProvider systemDateProvider;
 
 
     @Transactional
@@ -64,7 +64,7 @@ public class Cr60Service {
             throw new IllegalArgumentException("Invalid PAN applied flag");
         }
 
-        if(cr60.getPanApplyDate().isAfter(systemDateProvider.getSystemDate())){
+        if(cr60.getPanApply().equals("Y") && cr60.getPanApplyDate().isAfter(systemDateProvider.getSystemDate())){
             throw new IllegalArgumentException("PAN applied date cannot be future");
         }
 

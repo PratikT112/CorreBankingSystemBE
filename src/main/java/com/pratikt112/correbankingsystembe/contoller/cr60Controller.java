@@ -4,11 +4,14 @@ package com.pratikt112.correbankingsystembe.contoller;
 import com.pratikt112.correbankingsystembe.model.cr60.Cr60;
 import com.pratikt112.correbankingsystembe.service.Cr60Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
+
+import java.util.Optional;
 
 @RestController
 public class cr60Controller {
@@ -29,7 +32,11 @@ public class cr60Controller {
     @GetMapping("/cr60/{socNo}/{custNo}")
     public ResponseEntity<?> getCr60ByCustNo(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo){
         try{
-            Cr60 fetchedCr60 = cr60Service.findCr60ByCustNo(socNo, custNo);
+            Optional<Cr60> fetchedCr60 = cr60Service.findCr60ByCustNo(socNo, custNo);
+            return new ResponseEntity<>(fetchedCr60, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
     }
 }

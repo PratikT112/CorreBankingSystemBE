@@ -21,7 +21,7 @@ public class Cr60 {
     private String key1;
 
     @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
-    @Column(name = "CR60_SBM_DT")
+    @Column(name = "CR60_SBMT_DT")
     private LocalDate cr60SubmitDate;
 
     @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
@@ -66,7 +66,7 @@ public class Cr60 {
     @Column(name = "CUST_MOB_NO", length = 12)
     private String custMobileNo;
 
-    @Column(name = "CUST_TEL_NO", length = 12)
+    @Column(name = "CUST_TELE_NO", length = 12)
     private String custTelephoneNo;
 
     @Column(name = "CUST_ID_TYPE", length = 4)

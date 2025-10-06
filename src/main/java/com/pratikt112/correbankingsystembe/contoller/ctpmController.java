@@ -20,11 +20,11 @@ public class ctpmController {
         return new ResponseEntity<String>(docReqd, HttpStatus.OK);
     }
 
-    @GetMapping("/ctpm/{tieredCust}")
-    public ResponseEntity<Ctpm> getCtpm(@PathVariable String tieredCust){
-        Ctpm ctpm = ctpmService.getCtpm(tieredCust);
-        return new ResponseEntity<Ctpm>(ctpm, HttpStatus.OK);
-    }
+//    @GetMapping("/ctpm/{tieredCust}")
+//    public ResponseEntity<Ctpm> getCtpm(@PathVariable String tieredCust){
+//        Ctpm ctpm = ctpmService.getCtpm(tieredCust);
+//        return new ResponseEntity<Ctpm>(ctpm, HttpStatus.OK);
+//    }
 
     @PostMapping("/ctpm/new")
     public ResponseEntity<Ctpm> newCtpm(@RequestBody Ctpm ctpm){
