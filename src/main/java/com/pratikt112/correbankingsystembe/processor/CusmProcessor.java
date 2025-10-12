@@ -8,11 +8,13 @@ import com.pratikt112.correbankingsystembe.repo.CusmRepo;
 import com.pratikt112.correbankingsystembe.service.CifGeneratorService;
 import com.pratikt112.correbankingsystembe.service.CusmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
+@Order(1)
 public class CusmProcessor implements CustomerProcessingRule{
 
     private final CusmRepo cusmRepo;
@@ -29,6 +31,11 @@ public class CusmProcessor implements CustomerProcessingRule{
 //        this.newCIF = newCIF;
     }
 
+
+    @Override
+    public String getProcessorName() {
+        return "CUSM processor";
+    }
 
     @Override
     public boolean supports(CobData cobData, String newCIF) {

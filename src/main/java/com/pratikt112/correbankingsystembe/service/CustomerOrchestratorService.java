@@ -30,7 +30,7 @@ public class CustomerOrchestratorService {
 
         for(CustomerProcessingRule processor: processors){
             if(processor.supports(cobData, newCIF)){
-                log.info("Processing CIF: {} for {}", newCIF, processor.toString());
+                log.info("Processing CIF: {} for {}", newCIF, processor.getProcessorName());
                 processor.process(cobData, newCIF);
             }
         }

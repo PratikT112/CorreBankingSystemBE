@@ -6,10 +6,12 @@ import com.pratikt112.correbankingsystembe.model.cr60.Cr60;
 import com.pratikt112.correbankingsystembe.repo.Cr60Repo;
 import com.pratikt112.correbankingsystembe.service.Cr60Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 
 @Service
+@Order(2)
 public class Form60Processor implements CustomerProcessingRule{
 
     private final Cr60Repo cr60Repo;
@@ -21,6 +23,11 @@ public class Form60Processor implements CustomerProcessingRule{
         this.cr60Repo = cr60Repo;
         this.cr60Service = cr60Service;
 //        this.newCIF = newCIF;
+    }
+
+    @Override
+    public String getProcessorName() {
+        return "Form60 processor";
     }
 
     @Override

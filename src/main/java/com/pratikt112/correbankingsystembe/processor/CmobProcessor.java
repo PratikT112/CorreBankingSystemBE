@@ -11,12 +11,14 @@ import com.pratikt112.correbankingsystembe.repo.CmobRepo;
 import com.pratikt112.correbankingsystembe.repo.If3501Repo;
 import com.pratikt112.correbankingsystembe.service.CmobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
+@Order(3)
 public class CmobProcessor implements CustomerProcessingRule{
     private final CmobRepo cmobRepo;
     private final If3501Repo if3501Repo;
@@ -29,6 +31,11 @@ public class CmobProcessor implements CustomerProcessingRule{
         this.cmobService = cmobService;
         this.if3501Repo = if3501Repo;
         this.chnlMobVerifyRepo = chnlMobVerifyRepo;
+    }
+
+    @Override
+    public String getProcessorName() {
+        return "CMOB processor";
     }
 
     @Override
