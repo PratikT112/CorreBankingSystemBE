@@ -22,10 +22,15 @@ public class ProcessorList {
     @Autowired
     CusmProcessor cusmProcessor;
 
+    @Autowired
+    CmobProcessor cmobProcessor;
+
     private List<CustomerProcessingRule> processingRules = new ArrayList<>();
 
     public ProcessorList(){
         processingRules.add(cusmProcessor);
         processingRules.add(form60Processor);
+        processingRules.add(cmobProcessor);
+
     }
 }

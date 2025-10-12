@@ -1,5 +1,6 @@
 package com.pratikt112.correbankingsystembe.config;
 
+import lombok.Getter;
 import org.hibernate.annotations.Comment;
 import org.springframework.stereotype.Component;
 
@@ -7,13 +8,10 @@ import java.time.LocalDate;
 
 @Component
 public class SystemDateProvider {
-    private final LocalDate systemDate;
+    @Getter
+    static LocalDate systemDate;
 
     public SystemDateProvider(){
-        this.systemDate = LocalDate.now();
-    }
-
-    public LocalDate getSystemDate(){
-        return systemDate;
+        systemDate = LocalDate.now();
     }
 }

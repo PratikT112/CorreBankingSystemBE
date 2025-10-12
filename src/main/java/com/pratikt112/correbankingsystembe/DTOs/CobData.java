@@ -13,6 +13,8 @@ import java.time.LocalDate;
 public class CobData {
     // System
     private LocalDate regionDate;
+    private String transactionBranch;
+    private String batchTandem;
     // Personal
     private String custTierType;
     private String resiStatus;

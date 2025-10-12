@@ -166,9 +166,9 @@ public class CmobService {
             throw new IllegalArgumentException("Old Mobile numbers not applicable during creation.");
         }
 
-        if(!theOne.getVerifyFlag().equals(VerifyFlag.N)){
-            throw new IllegalArgumentException("Verify Flag other than N not applicable during creation");
-        }
+//        if(!theOne.getVerifyFlag().equals(VerifyFlag.N)){
+//            throw new IllegalArgumentException("Verify Flag other than N not applicable during creation");
+//        }
     }
 
     public List<Cmob> persistCmobAndMobh(List<Cmob> cmobList){
