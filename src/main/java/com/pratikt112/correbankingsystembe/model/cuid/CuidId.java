@@ -1,6 +1,5 @@
 package com.pratikt112.correbankingsystembe.model.cuid;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

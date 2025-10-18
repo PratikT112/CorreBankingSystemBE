@@ -1,4 +1,5 @@
-import com.pratikt112.correbankingsystembe.model.cuid.CuidId;
+package com.pratikt112.correbankingsystembe.model.cuid;
+
 import com.pratikt112.correbankingsystembe.utility.DdMmYyyyStringToLocalDateConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
