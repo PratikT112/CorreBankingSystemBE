@@ -29,7 +29,7 @@ public class cuidController {
             Cuid savedCuid = cuidService.saveCuid(newCuid);
             return new ResponseEntity<>(savedCuid, HttpStatus.CREATED);
         } catch (Exception e){
-            return new ResponseEntity<String>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+            throw e;
         }
     }
 }
