@@ -1,0 +1,30 @@
+meta {
+  name: New PSOF
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/psof/new
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "customerType": "01",
+      "psofId": {
+          "socNo": "003",
+          "custAcctNo": "0000008526012356"
+      },
+      "sourceFunds": "06",
+      "createDate": "2025-08-25",
+      "makerId": "2199690",
+      "checkerId": "2199691",
+      "branchNo": "00437"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

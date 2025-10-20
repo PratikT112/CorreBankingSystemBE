@@ -1,0 +1,31 @@
+meta {
+  name: NEW CUID
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/cuid/new
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "id": {
+          "instNo": "003",
+          "custNo": "0000008526000001",
+          "idType": "0004"
+      },
+      "idNumber": "W2010207",
+      "idExpiryDate": null,
+      "idIssueAt": "MumbaiPOI",
+      "idRemark": "MainID",
+      "idMain": "YY",
+      "idIssueDate": "2020-01-01"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

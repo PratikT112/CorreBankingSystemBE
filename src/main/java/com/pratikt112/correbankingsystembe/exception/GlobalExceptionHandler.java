@@ -144,6 +144,34 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DuplicateRecordException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateRecordException(DuplicateRecordException ex, WebRequest request){
+        logger.error("Duplicate record exception occurred: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                "DUPLICATE_RECORD_FOUND",
+                ex.getMessage(),
+                "A record with this information already exists. Please check your data and try again.",
+                request.getDescription(false).replace("uri=", "")
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(IncompleteDataException.class)
+    public ResponseEntity<ErrorResponse> handleIncompleteDataException(IncompleteDataException ex, WebRequest request){
+        logger.error("Incomplete data exception occurred: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                "INCOMPLETE_DATA_PROVIDED",
+                ex.getMessage(),
+                ex.getUserMessage(),
+                request.getDescription(false).replace("uri=", "")
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.PARTIAL_CONTENT);
+    }
+
     /*
     * Handle method not supported exceptions
     * */

@@ -1,0 +1,127 @@
+meta {
+  name: New Request
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/CIF/new
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "regionDate": "2025-10-06",
+    "transactionBranch": "00437",
+    "batchTandem": "E",
+    "custTierType": "010203",
+    "resiStatus": "1",
+    "custNameMain": {
+      "title": "01",
+      "firstName": "Pratik",
+      "middleName": "Shankar",
+      "lastName": "Telang"
+    },
+    "custNameMaiden": {
+      "title": "01",
+      "firstName": "Pratik",
+      "middleName": "Shankar",
+      "lastName": "Telang"
+    },
+    "custDob": "2001-02-11",
+    "custGender": "M",
+    "custMaritalStatus": "S",
+    "custFatherName": {
+      "title": "01",
+      "firstName": "Shankar",
+      "middleName": "Vasant",
+      "lastName": "Telang"
+    },
+    "custSpouseName": {
+      "title": "03",
+      "firstName": "Mrunalini",
+      "middleName": "Pratik",
+      "lastName": "Telang"
+    },
+    "custMotherName": {
+      "title": "03",
+      "firstName": "Pratiksha",
+      "middleName": "Shankar",
+      "lastName": "Telang"
+    },
+    "custNoOfDependents": 2,
+    "custIlliterate": "N",
+    "custGuardianName": null,
+    "custNationality": "IN",
+    "custOccType": "S",
+    "custOccSubType": "0170",
+    "custAnnIncome": 850000,
+    "custNetWorth": 2500000,
+    "custReligion": "H",
+    "custCategory": "O",
+    "custSourceFunds": "01",
+    "custDisability": "N",
+    "custOrganizationName": "Tata Consultancy Services Ltd",
+    "custDesignProfess": "Software Engineer",
+    "custNatureBusiness": "IT Services",
+    "custEduQualification": "6",
+    "custPolExpo": "N",
+    "custISO3166CountryJurisResi": "IN",
+    "custPOB": "Thane",
+    "custISO3166CountryBirth": "IN",
+    "custCitizenship": "IN",
+    "custTaxCountryYN": "Y",
+    "custPanF60None": "F",
+    "custPanNo": null,
+    "custForm60": {
+      "subDate": "2025-10-12",
+      "tranDate": "2025-10-12",
+      "agriIncome": 1010,
+      "otherIncome": 1010,
+      "panAppliedFlag": "Y",
+      "panAppliedDate": "2025-01-01",
+      "panAckNo": "123456789876543"
+    },
+    "custRelativeCode": "F",
+    "custMobNo": {
+      "isd": "+91",
+      "mobNo": "8104606145  "
+    },
+    "custTeleOff": null,
+    "custTeleRes": null,
+    "custEmail": "pratiktelang112@gmail.com",
+    "custOvdDetails": {
+      "ovdDocType": "02",
+      "ovdDocNumber": "YFA1372451",
+      "ovdDocIssueDate": "2022-06-20",
+      "ovdDocExpiryDate": "2032-06-20",
+      "ovdDocIssuedAt": "IssuedAt"
+    },
+    "custMainAddressDetails": {
+      "addrType": "01",
+      "addrProof": "04",
+      "addressLine1": "Flat - 603, Shree Ganaraya Tower",
+      "addressLine2": "Ganesh Mandir road",
+      "addressLine3": "Titwala East",
+      "country": "IN",
+      "state": "27",
+      "district": "27517",
+      "subDistrict": "27517147209",
+      "city": "400",
+      "village": "275171472093704",
+      "pincode": "400607"
+    },
+    "sameAsPOA": true,
+    "custAltAddressDetails": null,
+    "deemedOVDDocType": null,
+    "deemedOVDDocNumber": null,
+    "inbRequested": "Y",
+    "inbDeliveryMode": "01"
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+}

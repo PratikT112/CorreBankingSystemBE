@@ -1,0 +1,66 @@
+meta {
+  name: Verify Mobile
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8080/cmob/003/0000008526012352/91/7506111495/Y
+  body: none
+  auth: inherit
+}
+
+script:post-response {
+  var template = `
+  <style type="text/css">
+      .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}
+      .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}
+      .tftable tr {background-color:#ffffff;}
+      .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}
+      .tftable tr:hover {background-color:#e0ffff;}
+  </style>
+  
+  <table class="tftable" border="1">
+      <tr>
+          <th>Soc No</th>
+          <th>Cust No</th>
+          <th>Identifier</th>
+          <th>Cust Mob No</th>
+          <th>ISD Code</th>
+          <th>Old Cust Mob No</th>
+          <th>Old Mob ISD Code</th>
+          <th>Verify Flag</th>
+          <th>Channel ID</th>
+          <th>Change Date</th>
+          <th>Maker ID</th>
+          <th>Checker ID</th>
+          <th>DOV</th>
+      </tr>
+      <tr>
+          <td>{{response.id.socNo}}</td>
+          <td>{{response.id.custNo}}</td>
+          <td>{{response.id.identifier}}</td>
+          <td>{{response.custMobNo}}</td>
+          <td>{{response.isdCode}}</td>
+          <td>{{response.oldCustMobNo}}</td>
+          <td>{{response.oldMobIsdCode}}</td>
+          <td>{{response.verifyFlag}}</td>
+          <td>{{response.chnlId}}</td>
+          <td>{{response.changeDate}}</td>
+          <td>{{response.makerId}}</td>
+          <td>{{response.checkerId}}</td>
+          <td>{{response.dov}}</td>
+      </tr>
+  </table>
+  `;
+  
+  function constructVisualizerPayload() {
+      return {response: res.getBody()};
+  }
+  
+  // pm.visualizer.set(template, constructVisualizerPayload());
+}
+
+settings {
+  encodeUrl: true
+}

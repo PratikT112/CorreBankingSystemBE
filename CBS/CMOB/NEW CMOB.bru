@@ -1,0 +1,49 @@
+meta {
+  name: NEW CMOB
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/cmob/new
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+      {
+          "id": {
+              "socNo": "003",
+              "custNo": "0000008526012352",
+              "identifier": "T"
+          },
+          "custMobNo": "9322880598",
+          "isdCode": "91",
+          "mbexExpDt": "18082025",
+          // "oldCustMobNo": "9930473061",
+          // "oldMobIsdCode": "91",
+          "chnlId": " ",
+          "makerId": "2199690",
+          "checkerId": "2199691"
+      },
+      {
+          "id": {
+              "socNo": "003",
+              "custNo": "0000008526012352",
+              "identifier": "P"
+          },
+          "custMobNo": "7506111495",
+          "isdCode": "91",
+          // "oldCustMobNo": "",
+          // "oldMobIsdCode": "",
+          "chnlId": " ",
+          "makerId": "2199690",
+          "checkerId": "2199691"
+      }
+  ]
+}
+
+settings {
+  encodeUrl: true
+}

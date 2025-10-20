@@ -2,6 +2,8 @@ package com.pratikt112.correbankingsystembe.service;
 
 import com.pratikt112.correbankingsystembe.config.SystemDateProvider;
 import com.pratikt112.correbankingsystembe.exception.BankingSystemException;
+import com.pratikt112.correbankingsystembe.exception.DuplicateRecordException;
+import com.pratikt112.correbankingsystembe.exception.IncompleteDataException;
 import com.pratikt112.correbankingsystembe.exception.ValidationException;
 import com.pratikt112.correbankingsystembe.model.cuid.Cuid;
 import com.pratikt112.correbankingsystembe.repo.CuidRepo;
@@ -36,11 +38,11 @@ public class CuidService {
                 newCuid.getIdExpiryDate() == null ||
                 newCuid.getIdIssueAt() == null ||
                 newCuid.getIdMain() == null){
-            throw new IllegalArgumentException("Required data not provided for ID");
+            throw new IncompleteDataException("CUID", "IdIssueDate");      //To be fixed
         }
 
         if(cuidRepo.existsById(newCuid.getId())){
-            throw new IllegalArgumentException("Customer Record already exists.");
+            throw new DuplicateRecordException("CUID", newCuid.getId().getCustNo());
         }
 
         if(Objects.equals(newCuid.getIdMain(), "Y")){

@@ -25,11 +25,15 @@ public class cuidController {
 
     @PostMapping("/cuid/new")
     public ResponseEntity<?> saveCuid(@Valid @RequestBody Cuid newCuid){
-        try{
-            Cuid savedCuid = cuidService.saveCuid(newCuid);
-            return new ResponseEntity<>(savedCuid, HttpStatus.CREATED);
-        } catch (Exception e){
-            throw e;
-        }
+
+        Cuid savedCuid = cuidService.saveCuid(newCuid);
+        return new ResponseEntity<>(savedCuid, HttpStatus.CREATED);
+
+//        try{
+//            Cuid savedCuid = cuidService.saveCuid(newCuid);
+//            return new ResponseEntity<>(savedCuid, HttpStatus.CREATED);
+//        } catch (Exception e){
+//            throw e;
+//        }
     }
 }

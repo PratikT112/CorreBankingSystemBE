@@ -1,0 +1,30 @@
+meta {
+  name: Amend PSOF
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://localhost:8080/psof/003/0000008526012357
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "customerType": "01",
+      "psofId": {
+          "socNo": "003",
+          "custAcctNo": "0000008526012356"
+      },
+      "sourceFunds": "",
+      "createDate": "2025-08-25",
+      "makerId": "2199690",
+      "checkerId": "2199691",
+      "branchNo": "00437"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

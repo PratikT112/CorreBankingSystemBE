@@ -1,0 +1,15 @@
+meta {
+  name: Get OCOM
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/ocom/003/0000008526012352
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
