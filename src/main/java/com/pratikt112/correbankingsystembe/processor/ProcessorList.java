@@ -17,13 +17,18 @@ import java.util.List;
 public class ProcessorList {
 
     @Autowired
-    Form60Processor form60Processor;
-
-    @Autowired
     CusmProcessor cusmProcessor;
 
     @Autowired
+    Form60Processor form60Processor;
+
+    @Autowired
     CmobProcessor cmobProcessor;
+
+    @Autowired
+    CuidProcessor cuidProcessor;
+
+
 
     private List<CustomerProcessingRule> processingRules = new ArrayList<>();
 
@@ -31,6 +36,6 @@ public class ProcessorList {
         processingRules.add(cusmProcessor);
         processingRules.add(form60Processor);
         processingRules.add(cmobProcessor);
-
+        processingRules.add(cuidProcessor);
     }
 }
