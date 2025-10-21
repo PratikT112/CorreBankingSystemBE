@@ -44,4 +44,18 @@ public class Cuid implements Serializable {
     @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
     @Column(name = "ID_ISSUE_DATE", length = 8)
     private LocalDate idIssueDate;
+
+    // --- Padding logic ---
+    @PrePersist
+    @PreUpdate
+    private void formatFields() {
+        id.setIdType(padLeft(id.getIdType(), 4));
+    }
+
+    private String padLeft(String value, int length) {
+        if (value.trim().length() >= length) return value;
+        return String.format("%" + length + "s", value).replace(' ', '0');
+    }
+
+
 }
