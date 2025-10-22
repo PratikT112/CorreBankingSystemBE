@@ -3,6 +3,10 @@ package com.pratikt112.correbankingsystembe.service;
 
 import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
+import com.pratikt112.correbankingsystembe.exception.DuplicateRecordException;
+import com.pratikt112.correbankingsystembe.exception.IncompleteDataException;
+import com.pratikt112.correbankingsystembe.exception.ProcessingException;
+import com.pratikt112.correbankingsystembe.exception.ValidationException;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
 import com.pratikt112.correbankingsystembe.model.mbex.Mbex;
@@ -199,48 +203,74 @@ public class CmobService {
 
     private void validateTwoCmobEntries(Cmob first, Cmob second) {
 
-        if(cmobRepo.existsById(first.getId()) || cmobRepo.existsById(second.getId())){
-            throw new IllegalArgumentException("Customer Record already exists");
+//        if(cmobRepo.existsById(first.getId()) || cmobRepo.existsById(second.getId())){
+//            throw new IllegalArgumentException("Customer Record already exists");
+//        }
+
+        if(cmobRepo.existsById(first.getId())){
+            throw new DuplicateRecordException("CMOB", first.getCustMobNo());
         }
 
+        if(cmobRepo.existsById(second.getId())){
+            throw new DuplicateRecordException("CMOB", second.getCustMobNo());
+        }
+
+
+
+
         if(!(first.getId().getSocNo().equals(second.getId().getSocNo()) && first.getId().getCustNo().equals(second.getId().getCustNo()))){
-            throw new IllegalArgumentException("Both Mobile Numbers should be provided for the same customer");
+            throw new IncompleteDataException("INCOMPLETE_DATA_EXCEPTION",
+                    "Both Mobile Numbers should be provided for the same customer",
+                    "Please check your data and try again");
         }
 
         if(first.getMbexExpDt()==null){
-            throw new IllegalArgumentException("Expiry date is needed for Temporary mobile number");
+            throw new IncompleteDataException("Expiry date is needed for Temporary mobile number",
+                    "Provide expiry date for temporary mobile number and try again", false);
         }
 
         if(first.getId().getIdentifier().equals(second.getId().getIdentifier())){
-            throw new IllegalArgumentException("Both Mobile Numbers cannot be Permanent/Temporary");
+            throw new ProcessingException("PROCESSING_ERROR",
+                    "Both Mobile Numbers cannot be Permanent/Temporary",
+                    "Please provide different identifiers for both mobile numbers");
         }
 
         if(first.getCustMobNo().equals(second.getCustMobNo()) && first.getIsdCode().equals(second.getIsdCode())){
-            throw new IllegalArgumentException("Both Mobile Numbers cannot be the same");
+            throw new ProcessingException("PROCESSING_ERROR",
+                    "Both Mobile Numbers cannot be the same",
+                    "Please provide different mobile numbers and try again");
         }
 
         if((first.getOldMobIsdCode()!= null && first.getOldCustMobNo()!= null)
                 ||(second.getOldMobIsdCode()!= null && second.getOldCustMobNo()!= null)){
-            throw new IllegalArgumentException("Old Mobile numbers not applicable during creation.");
+            throw new ProcessingException("PROCESSING_ERROR",
+                    "Old Mobile numbers not applicable during creation.",
+                    "Please remove old mobile number an try again.");
         }
 
         if (!first.getVerifyFlag().equals(VerifyFlag.N) ||
                 !second.getVerifyFlag().equals(VerifyFlag.N)) {
-            throw new IllegalArgumentException("Verify Flag other than N not applicable during creation");
+            throw new ProcessingException("PROCESSING_ERROR",
+                    "Verify Flag other than N not applicable during creation",
+                    "Please check verify flag and try again");
         }
     }
 
     public void validateSingleCmobEntry(Cmob theOne){
         if(cmobRepo.existsById(theOne.getId())){
-            throw new IllegalArgumentException("Customer Record already exists");
+            throw new DuplicateRecordException("CMOB", theOne.getCustMobNo());
         }
 
         if(!"P".equals(theOne.getId().getIdentifier())){
-            throw new IllegalArgumentException("Temporary mobile number cannot be created without Permanent mobile number");
+            throw new ProcessingException("PROCESSING_ERROR",
+                    "Temporary mobile number cannot be created without Permanent mobile number.",
+                    "Please provide permanent mobile number and try again.");
         }
 
         if(theOne.getOldMobIsdCode() != null || theOne.getOldCustMobNo()!= null){
-            throw new IllegalArgumentException("Old Mobile numbers not applicable during creation.");
+            throw new ProcessingException("PROCESSING_ERROR",
+                    "Old Mobile numbers not applicable during creation.",
+                    "Please remove old mobile number an try again.");
         }
 
 //        if(!theOne.getVerifyFlag().equals(VerifyFlag.N)){
@@ -302,10 +332,10 @@ public class CmobService {
                 Cmob theOne = cmobList.get(0);
                 return saveSingleCmobEntry(theOne);
             } else {
-                throw new IllegalArgumentException("Invalid Mobile Number count");
+                throw new ValidationException("VALIDATION_ERROR",
+                        "Invalid Mobile Number count.",
+                        "Either 1 or 2 mobile numbers can be provided for a customer during creation.");
             }
-        } catch (IllegalArgumentException e){
-            throw e;
         } catch (DataIntegrityViolationException e){
             throw new RuntimeException("Database constraint violated while saving CMOB or MOBH: " + e.getMostSpecificCause().getMessage(), e);
         } catch (Exception e) {

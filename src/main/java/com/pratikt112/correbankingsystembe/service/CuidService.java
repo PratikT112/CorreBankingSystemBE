@@ -70,7 +70,10 @@ public class CuidService {
         List<String> dupCIFList = cuidRepo.IdAlreadyExistsCIF(newCuid.getId().getIdType(), newCuid.getIdNumber());
         String dupCIFNo = dupCIFList.isEmpty() ? null : dupCIFList.getFirst();
         if(dupCIFNo!=null){
-            throw new IllegalArgumentException("Id already exists for CIF: "+ dupCIFNo);
+//            throw new IllegalArgumentException("Id already exists for CIF: "+ dupCIFNo);
+            throw new DuplicateRecordException("DUPLICATE_RECORD_ERROR",
+                    "Id already exists for CIF: "+ dupCIFNo,
+                    "Id already exists for other CIF. Recheck and try again.");
         }
 
     }

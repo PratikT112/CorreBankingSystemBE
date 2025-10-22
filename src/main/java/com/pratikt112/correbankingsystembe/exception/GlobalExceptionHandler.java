@@ -151,7 +151,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 "DUPLICATE_RECORD_FOUND",
                 ex.getMessage(),
-                "A record with this information already exists. Please check your data and try again.",
+                ex.getUserMessage(),
                 request.getDescription(false).replace("uri=", "")
         );
 
