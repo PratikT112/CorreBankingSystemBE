@@ -34,6 +34,10 @@ public class CustomerOrchestratorService {
                 processor.process(cobData, newCIF);
             }
         }
-
     }
+
+    public void amendCustomer(CobData newCobData){
+        log.info("Code to be written");
+    }
+
 }

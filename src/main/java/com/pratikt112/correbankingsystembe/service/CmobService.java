@@ -119,43 +119,43 @@ public class CmobService {
         return null;
     }
 
-    private Cmob pickByIdentifier(List<Cmob> mobiles, String identifier){
+    public Cmob pickByIdentifier(List<Cmob> mobiles, String identifier){
         return mobiles.get(0).getId().getIdentifier().equals(identifier)
                 ? mobiles.get(0)
                 : mobiles.get(1);
     }
 
-    private boolean isValidNumber(Cmob cmob){
+    public boolean isValidNumber(Cmob cmob){
         return cmob != null
                 && !cmob.getCustMobNo().trim().isEmpty()
                 && !cmob.getIsdCode().trim().isEmpty();
     }
 
 
-    private boolean isVerified(Cmob cmob){
+    public boolean isVerified(Cmob cmob){
         return List.of("Y","E","S").contains(cmob.getVerifyFlag().toString());
     }
 
-    private boolean isTempMobileValid(Cmob cmob){
+    public boolean isTempMobileValid(Cmob cmob){
         String mbexExpDt = mbexRepo.getMobExpDtById(new MbexId(cmob.getId().getSocNo(), cmob.getId().getCustNo()))
                 .orElseThrow(()->new IllegalArgumentException("No expiry date found for temporary mobile"));
         return DateConverter.compareDate(mbexExpDt, dateUtil.getCurrentDateInDDMMYYYY()) > 0;
     }
 
-    private boolean hasOldNumber(Cmob cmob){
+    public boolean hasOldNumber(Cmob cmob){
         return !cmob.getOldMobIsdCode().trim().isEmpty()
                 && !cmob.getOldCustMobNo().trim().isEmpty();
     }
 
-    private List<String> currMobileAsList(Cmob cmob){
+    public List<String> currMobileAsList(Cmob cmob){
         return List.of(cmob.getIsdCode(), cmob.getCustMobNo());
     }
 
-    private List<String> oldMobileAsList(Cmob cmob){
+    public List<String> oldMobileAsList(Cmob cmob){
         return List.of(cmob.getOldMobIsdCode(), cmob.getOldCustMobNo());
     }
 
-    private List<String> tryPermanent(List<Cmob> mobileNos){
+    public List<String> tryPermanent(List<Cmob> mobileNos){
         Cmob permanent = pickByIdentifier(mobileNos, "P");
         if(isValidNumber(permanent)){
             if(isVerified(permanent)){
@@ -187,7 +187,7 @@ public class CmobService {
         return persistCmobAndMobh(List.of(theOne));
     }
 
-    private void checkChnlMobVerify(Cmob theOne) {
+    public void checkChnlMobVerify(Cmob theOne) {
         if(Objects.equals(theOne.getChnlId(), " ")){
             if(chnlMobVerifyRepo.existsById("SPACE")){
                 theOne.setVerifyFlag(VerifyFlag.Y);
@@ -201,7 +201,7 @@ public class CmobService {
         }
     }
 
-    private void validateTwoCmobEntries(Cmob first, Cmob second) {
+    public void validateTwoCmobEntries(Cmob first, Cmob second) {
 
 //        if(cmobRepo.existsById(first.getId()) || cmobRepo.existsById(second.getId())){
 //            throw new IllegalArgumentException("Customer Record already exists");

@@ -16,8 +16,8 @@ public class CobData {
     private String transactionBranch;
     private String batchTandem;
     // Personal
-    private String custTierType;
-    private String resiStatus;
+    private String custTierType;                    //cusm
+    private String resiStatus;                      //cusm
     private PersonName custNameMain;
     private PersonName custNameMaiden;
     private LocalDate custDob;
@@ -26,7 +26,6 @@ public class CobData {
     private PersonName custFatherName;
     private PersonName custSpouseName;
     private PersonName custMotherName;
-    private Integer custNoOfDependents;
     private String custIlliterate;
     private PersonName custGuardianName;
     private String custNationality;

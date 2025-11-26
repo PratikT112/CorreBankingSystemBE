@@ -20,14 +20,13 @@ import java.util.Objects;
 @Service
 @Order(3)
 public class CmobProcessor implements CustomerProcessingRule{
-    private final CmobRepo cmobRepo;
+
     private final If3501Repo if3501Repo;
     private final CmobService cmobService;
     private final ChnlMobVerifyRepo chnlMobVerifyRepo;
 
     @Autowired
-    public CmobProcessor(CmobRepo cmobRepo, CmobService cmobService, If3501Repo if3501Repo, ChnlMobVerifyRepo chnlMobVerifyRepo){
-        this.cmobRepo = cmobRepo;
+    public CmobProcessor( CmobService cmobService, If3501Repo if3501Repo, ChnlMobVerifyRepo chnlMobVerifyRepo){
         this.cmobService = cmobService;
         this.if3501Repo = if3501Repo;
         this.chnlMobVerifyRepo = chnlMobVerifyRepo;
