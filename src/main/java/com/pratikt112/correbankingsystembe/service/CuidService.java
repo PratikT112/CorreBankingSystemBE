@@ -34,6 +34,7 @@ public class CuidService {
 
         if(newCuid.getId()==null ||
                 newCuid.getIdNumber()==null ||
+                newCuid.getIdNumber().isBlank() ||
                 newCuid.getIdIssueDate() == null ||
                 newCuid.getIdExpiryDate() == null ||
                 newCuid.getIdIssueAt() == null ||

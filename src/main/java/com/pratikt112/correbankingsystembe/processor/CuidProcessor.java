@@ -17,18 +17,16 @@ import org.springframework.stereotype.Service;
 public class CuidProcessor implements CustomerProcessingRule{
     private final CuidRepo cuidRepo;
     private final CuidService cuidService;
-    private final CmobService cmobService;
 
     @Autowired
     public CuidProcessor(CuidRepo cuidRepo, CuidService cuidService, CmobService cmobService){
         this.cuidRepo = cuidRepo;
         this.cuidService = cuidService;
-        this.cmobService = cmobService;
     }
 
     @Override
     public String getProcessorName() {
-        return "CMOB processor";
+        return "CUID processor";
     }
 
     @Override

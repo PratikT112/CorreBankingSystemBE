@@ -18,16 +18,16 @@ public class CobData {
     // Personal
     private String custTierType;                    //cusm
     private String resiStatus;                      //cusm
-    private PersonName custNameMain;
-    private PersonName custNameMaiden;
-    private LocalDate custDob;
-    private String custGender;
-    private String custMaritalStatus;
-    private PersonName custFatherName;
-    private PersonName custSpouseName;
-    private PersonName custMotherName;
-    private String custIlliterate;
-    private PersonName custGuardianName;
+    private PersonName custNameMain;                //cusvaa
+//    private PersonName custNameMaiden;
+    private LocalDate custDob;                      //cusvdd
+    private String custGender;                      //cusvdd
+    private String custMaritalStatus;               //cusvdd
+    private PersonName custFatherName;              //cusvaa
+    private PersonName custSpouseName;              //cusvaa
+    private PersonName custMotherName;              //cusvaa
+//    private String custIlliterate;
+//    private PersonName custGuardianName;
     private String custNationality;
     private String custOccType;
     private String custOccSubType;
@@ -36,17 +36,17 @@ public class CobData {
     private String custReligion;
     private String custCategory;
     private String custSourceFunds;
-    private String custDisability;
-    private String custOrganizationName;
-    private String custDesignProfess;
-    private String custNatureBusiness;
-    private String custEduQualification;
-    private String custPolExpo;
-    private String custISO3166CountryJurisResi;
+//    private String custDisability;
+//    private String custOrganizationName;
+//    private String custDesignProfess;
+//    private String custNatureBusiness;
+//    private String custEduQualification;
+//    private String custPolExpo;
+//    private String custISO3166CountryJurisResi;
     private String custPOB;
     private String custISO3166CountryBirth;
     private String custCitizenship;
-    private String custTaxCountryYN;
+//    private String custTaxCountryYN;
     private String custPanF60None;
     private String custPanNo;
     private Form60 custForm60;
@@ -60,11 +60,11 @@ public class CobData {
 
     private OvdDetails custOvdDetails;
     private AddressDetails custMainAddressDetails;
-    private boolean sameAsPOA;
-    private AddressDetails custAltAddressDetails;
-    private String deemedOVDDocType;
-    private String deemedOVDDocNumber;
-    private String inbRequested;     // "yes" | "no"
-    private String inbDeliveryMode;  // "online" | "sms" | "email" | "none"
-    private String inbRefNo;
+//    private boolean sameAsPOA;
+//    private AddressDetails custAltAddressDetails;
+//    private String deemedOVDDocType;
+//    private String deemedOVDDocNumber;
+//    private String inbRequested;     // "yes" | "no"
+//    private String inbDeliveryMode;  // "online" | "sms" | "email" | "none"
+//    private String inbRefNo;
 }

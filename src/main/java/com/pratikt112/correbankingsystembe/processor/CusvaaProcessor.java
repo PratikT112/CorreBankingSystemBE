@@ -4,9 +4,7 @@ import com.pratikt112.correbankingsystembe.DTOs.CobData;
 import com.pratikt112.correbankingsystembe.config.SystemDateProvider;
 import com.pratikt112.correbankingsystembe.model.cusvaa.Cusvaa;
 import com.pratikt112.correbankingsystembe.model.cusvaa.CusvaaId;
-import com.pratikt112.correbankingsystembe.repo.CusvaaRepo;
 import com.pratikt112.correbankingsystembe.service.CusvaaService;
-import com.zaxxer.hikari.HikariConfigMXBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -16,12 +14,10 @@ import java.time.LocalDate;
 @Service
 @Order(5)
 public class CusvaaProcessor implements CustomerProcessingRule{
-    private final CusvaaRepo cusvaaRepo;
     private final CusvaaService cusvaaService;
 
     @Autowired
-    public CusvaaProcessor(CusvaaRepo cusvaaRepo, CusvaaService cusvaaService) {
-        this.cusvaaRepo = cusvaaRepo;
+    public CusvaaProcessor(CusvaaService cusvaaService) {
         this.cusvaaService = cusvaaService;
     }
 
@@ -43,7 +39,7 @@ public class CusvaaProcessor implements CustomerProcessingRule{
 
     static Cusvaa constructCusvaaFromCobData(CobData cobData, String newCIF){
         Cusvaa constructed = new Cusvaa();
-        constructed.setId(new CusvaaId("003", newCIF, "1"));
+        constructed.setId(new CusvaaId("003", newCIF, "0001"));
         constructed.setCode("XX");
         constructed.setDeli("N");
         constructed.setTitleCode(cobData.getCustNameMain().getTitle());
