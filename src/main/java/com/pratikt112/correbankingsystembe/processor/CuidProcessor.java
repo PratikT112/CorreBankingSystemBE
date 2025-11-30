@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 @Order(4)
@@ -36,10 +39,15 @@ public class CuidProcessor implements CustomerProcessingRule{
 
     @Override
     public void process(CobData cobData, String newCIF) {
-        Cuid constructed = constructCuidFromCobData(cobData, newCIF);
-        cuidService.saveCuid(constructed);
+        List<Cuid> constructed = constructCuidListFromCobData(cobData, newCIF);
+        if(constructed.size() > 1){
+            cuidService.saveCuid(constructed);
+        } else {
+            cuidService.saveCuid(constructed.getFirst());
+        }
     }
 
+    /**
     static Cuid constructCuidFromCobData(CobData cobData, String newCIF){
         OvdDetails dtoOvd = cobData.getCustOvdDetails();
         Cuid constructed = new Cuid();
@@ -51,5 +59,22 @@ public class CuidProcessor implements CustomerProcessingRule{
         constructed.setIdMain("Y");
         constructed.setIdIssueDate(dtoOvd.getOvdDocIssueDate());
         return constructed;
+    }**/
+
+    static List<Cuid> constructCuidListFromCobData(CobData cobData, String newCIF){
+        List<Cuid> constructedCuids = new ArrayList<Cuid>();
+        List<OvdDetails> dtoOvdList = cobData.getCustOvdDetails();
+        for(OvdDetails entry: dtoOvdList){
+            Cuid constructed = new Cuid();
+            constructed.setId(new CuidId("003", newCIF, entry.getOvdDocType()));
+            constructed.setIdNumber(entry.getOvdDocNumber());
+            constructed.setIdExpiryDate(entry.getOvdDocExpiryDate());
+            constructed.setIdIssueAt(entry.getOvdDocIssuedAt());
+            constructed.setIdRemark(entry.getOvdDocRemark());
+            constructed.setIdMain(entry.getOvdDocMain());
+            constructed.setIdIssueDate(entry.getOvdDocIssueDate());
+            constructedCuids.add(constructed);
+        }
+        return constructedCuids;
     }
 }

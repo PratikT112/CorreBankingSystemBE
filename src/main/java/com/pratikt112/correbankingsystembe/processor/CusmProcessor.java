@@ -72,7 +72,7 @@ public class CusmProcessor implements CustomerProcessingRule{
         constructed.setLastStatChgDt(SystemDateProvider.getSystemDate());
 //        constructed.setDeliveryMode(cobData.getInbDeliveryMode());
         constructed.setCustTaxPan(cobData.getCustPanNo());
-        constructed.setCustVoterId(Objects.equals(cobData.getCustOvdDetails().getOvdDocType(), "02") ? cobData.getCustOvdDetails().getOvdDocNumber() : " " );
+//        constructed.setCustVoterId(Objects.equals(cobData.getCustOvdDetails().stream().filter(x->x.getOvdDocType().equals("0002")).findFirst(), "02") ? cobData.getCustOvdDetails().getOvdDocNumber() : " " );
         constructed.setCustEvalFlag("Y");
         constructed.setPostCheckerId("2199690");
         return constructed;

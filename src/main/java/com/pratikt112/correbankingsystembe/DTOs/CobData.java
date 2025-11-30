@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -58,7 +59,8 @@ public class CobData {
     private String custTeleRes;
     private String custEmail;
 
-    private OvdDetails custOvdDetails;
+//    private OvdDetails custOvdDetails;
+    private List<OvdDetails> custOvdDetails;
     private AddressDetails custMainAddressDetails;
 //    private boolean sameAsPOA;
 //    private AddressDetails custAltAddressDetails;

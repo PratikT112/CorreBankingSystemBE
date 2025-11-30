@@ -16,4 +16,6 @@ public class OvdDetails {
     private LocalDate ovdDocIssueDate;
     private LocalDate ovdDocExpiryDate;
     private String ovdDocIssuedAt;
+    private String ovdDocMain = "N";
+    private String ovdDocRemark;
 }

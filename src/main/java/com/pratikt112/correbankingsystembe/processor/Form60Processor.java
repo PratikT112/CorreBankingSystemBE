@@ -2,6 +2,7 @@ package com.pratikt112.correbankingsystembe.processor;
 
 import com.pratikt112.correbankingsystembe.DTOs.CobData;
 import com.pratikt112.correbankingsystembe.DTOs.Form60;
+import com.pratikt112.correbankingsystembe.DTOs.OvdDetails;
 import com.pratikt112.correbankingsystembe.model.cr60.Cr60;
 import com.pratikt112.correbankingsystembe.repo.Cr60Repo;
 import com.pratikt112.correbankingsystembe.service.Cr60Service;
@@ -59,8 +60,8 @@ public class Form60Processor implements CustomerProcessingRule{
         constructed.setCustDob(cobData.getCustDob());
         constructed.setCustMobileNo(cobData.getCustMobNo().getMobNo());
         constructed.setCustTelephoneNo(cobData.getCustTeleRes());
-        constructed.setCustIdType(cobData.getCustOvdDetails().getOvdDocType());
-        constructed.setCustIdNum(cobData.getCustOvdDetails().getOvdDocNumber());
+        constructed.setCustIdType(cobData.getCustOvdDetails().stream().filter(x->"Y".equals(x.getOvdDocMain())).findFirst().map(OvdDetails::getOvdDocType).orElse("    "));
+        constructed.setCustIdNum(cobData.getCustOvdDetails().stream().filter(x->"Y".equals(x.getOvdDocMain())).findFirst().map(OvdDetails::getOvdDocNumber).orElse("0000000000000000"));
         constructed.setAddr1(cobData.getCustMainAddressDetails().getAddressLine1());
         constructed.setAddr2(cobData.getCustMainAddressDetails().getAddressLine2());
         constructed.setAddr3(cobData.getCustMainAddressDetails().getAddressLine3());

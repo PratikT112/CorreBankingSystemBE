@@ -39,7 +39,7 @@ public class CustomerFetchAggregator {
             Optional<Cusm> fetchedCusm = cusmRepo.findById(new CusmId("003", cifNo));
             Optional<Cr60> fetchedCr60 = cr60Repo.findById("003" + cifNo);
             Optional<Cmob> fetchedCmob = cmobRepo.findById(new CmobId("003", cifNo, "P"));
-            Optional<Cuid> fetchedCuid = cuidRepo.findById(new CuidId("003", cifNo, newCobData.getCustOvdDetails().getOvdDocType()));
+            Optional<Cuid> fetchedCuid = cuidRepo.findById(new CuidId("003", cifNo, newCobData.getCustOvdDetails().stream().filter(x->"Y".equals(x.getOvdDocType())).findFirst().map(OvdDetails::getOvdDocType).orElse("")));
             Optional<Cusvaa> fetchedCusvaa = cusvaaRepo.findById(new CusvaaId("003", cifNo, "0001"));
             Optional<Cusvdd> fetchedCusvdd = cusvddRepo.findById("003"+cifNo);
         } catch (Exception e) {
@@ -50,11 +50,11 @@ public class CustomerFetchAggregator {
 
     private CobData constructCobToCompare(Cusm fetchedCusm, Cr60 fetchedCr60, Cmob fetchedCmob, Cuid fetchedCuid, Cusvaa fetchedCusvaa, Cusvdd fetchedCusvdd){
         CobData constructed = new CobData();
-        constructed.setCustOvdDetails(new OvdDetails(fetchedCuid.getId().getIdType(),
-                fetchedCuid.getIdNumber(),
-                fetchedCuid.getIdIssueDate(),
-                fetchedCuid.getIdExpiryDate(),
-                fetchedCuid.getIdIssueAt()));
+//        constructed.setCustOvdDetails(new OvdDetails(fetchedCuid.getId().getIdType(),
+//                fetchedCuid.getIdNumber(),
+//                fetchedCuid.getIdIssueDate(),
+//                fetchedCuid.getIdExpiryDate(),
+//                fetchedCuid.getIdIssueAt()));
 
         constructed.setCustTierType(fetchedCusm.getTierCustType());
         constructed.setResiStatus(fetchedCusm.getResiStatus());

@@ -2,6 +2,8 @@ package com.pratikt112.correbankingsystembe.processor;
 
 
 import com.pratikt112.correbankingsystembe.DTOs.CobData;
+import com.pratikt112.correbankingsystembe.DTOs.OvdDetails;
+import com.pratikt112.correbankingsystembe.exception.IncompleteDataException;
 import com.pratikt112.correbankingsystembe.model.cusvdd.Cusvdd;
 import com.pratikt112.correbankingsystembe.service.CusvddService;
 import org.springframework.core.annotation.Order;
@@ -39,7 +41,12 @@ public class CusvddProcessor implements CustomerProcessingRule{
     static Cusvdd constructCusvddFromCobData(CobData cobData, String newCIF){
         Cusvdd constructed = new Cusvdd();
         constructed.setKey1("003" + newCIF);
-        constructed.setId1(cobData.getCustOvdDetails().getOvdDocNumber());
+        constructed.setId1(cobData.getCustOvdDetails()
+                .stream()
+                .filter(x->"Y".equals(x.getOvdDocMain()))
+                .findFirst()
+                .map(OvdDetails::getOvdDocNumber)
+                .orElse(" "));
         constructed.setBirthDate1(cobData.getCustDob());
         constructed.setDeathDate(null);
         constructed.setSexCode(cobData.getCustGender());

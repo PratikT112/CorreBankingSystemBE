@@ -1,7 +1,6 @@
 package com.pratikt112.correbankingsystembe.service;
 
 import com.pratikt112.correbankingsystembe.config.SystemDateProvider;
-import com.pratikt112.correbankingsystembe.exception.BankingSystemException;
 import com.pratikt112.correbankingsystembe.exception.DuplicateRecordException;
 import com.pratikt112.correbankingsystembe.exception.IncompleteDataException;
 import com.pratikt112.correbankingsystembe.exception.ValidationException;
@@ -9,7 +8,10 @@ import com.pratikt112.correbankingsystembe.model.cuid.Cuid;
 import com.pratikt112.correbankingsystembe.repo.CuidRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,15 +32,44 @@ public class CuidService {
         return persistCuid(newCuid);
     }
 
-    public void validateCuid(Cuid newCuid){
+    @Transactional
+    public List<Cuid> saveCuid(List<Cuid> cuidList){
+        List<Cuid> savedCuid = new ArrayList<Cuid>();
+        transformCuidListToSave(cuidList);
+        for(Cuid entry: cuidList) validateCuid(entry);
+        savedCuid = cuidRepo.saveAll(cuidList);
+        return savedCuid;
+    }
 
+    private void transformCuidListToSave(List<Cuid> cuidList) {
+        Cuid idMain = cuidList.stream()
+                .filter(x->"Y".equals(x.getIdMain()))
+                .findFirst()
+                .orElse(null);
+        if(idMain != null){
+            cuidList.remove(idMain);
+            cuidList.addFirst(idMain);
+        } else {
+            throw new IncompleteDataException("REQUIRED_ID_NOT_PROVIDED",
+                    "Main ID not provided for customer",
+                    "At least one of the IDs provided has to have ID_MAIN as Y");
+        }
+
+        List<Cuid> remaining = cuidList.subList(1, cuidList.size());
+        remaining.sort(Comparator.comparingInt(c->Integer.parseInt(c.getId().getIdType())));
+
+    }
+
+    public void validateCuid(Cuid newCuid){
         if(newCuid.getId()==null ||
                 newCuid.getIdNumber()==null ||
                 newCuid.getIdNumber().isBlank() ||
                 newCuid.getIdIssueDate() == null ||
                 newCuid.getIdExpiryDate() == null ||
                 newCuid.getIdIssueAt() == null ||
-                newCuid.getIdMain() == null){
+                newCuid.getIdIssueAt().isBlank() ||
+                newCuid.getIdMain() == null ||
+                newCuid.getIdMain().isBlank()){
             throw new IncompleteDataException("CUID", "IdIssueDate");      //To be fixed
         }
 
@@ -56,7 +87,6 @@ public class CuidService {
         }
 
         if(newCuid.getIdIssueDate().isAfter(SystemDateProvider.getSystemDate())){
-//            throw new IllegalArgumentException("Id Issue Date should not be future date");
             throw new ValidationException("VALIDATION_ERROR",
                     "Id Issue Date should not be future date",
                     "Invalid ID Issue Date provided");
