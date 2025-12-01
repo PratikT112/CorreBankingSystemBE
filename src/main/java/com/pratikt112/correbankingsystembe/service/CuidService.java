@@ -78,12 +78,18 @@ public class CuidService {
             throw new IncompleteDataException("CUID", "IdIssueDate");      //To be fixed
         }
 */
-        NullBlankUtility.validateNotNull(newCuid.getId(), "CUID", "CUID_KEY");
-        NullBlankUtility.validateNotBlank(newCuid.getIdNumber(), "CUID", "ID_NUMBER");
-        NullBlankUtility.validateNotNull(newCuid.getIdIssueDate(), "CUID", "ID_ISSUE_DATE");
-        NullBlankUtility.validateNotNull(newCuid.getIdExpiryDate(), "CUID", "ID_EXPIRY_DATE");
-        NullBlankUtility.validateNotBlank(newCuid.getIdIssueAt(), "CUID", "ID_ISSUED_AT");
-        NullBlankUtility.validateNotBlank(newCuid.getIdMain(), "CUID", "ID_MAIN");
+        NullBlankUtility.validateNotNull(newCuid.getId(),
+                () -> new IncompleteDataException("CUID", "CUID_KEY"));
+        NullBlankUtility.validateNotBlank(newCuid.getIdNumber(),
+                () -> new IncompleteDataException("CUID", "ID_NUMBER"));
+        NullBlankUtility.validateNotNull(newCuid.getIdIssueDate(),
+                () -> new IncompleteDataException("CUID", "ID_ISSUE_DATE"));
+        NullBlankUtility.validateNotNull(newCuid.getIdExpiryDate(),
+                () -> new IncompleteDataException("CUID", "ID_EXPIRY_DATE"));
+        NullBlankUtility.validateNotBlank(newCuid.getIdIssueAt(),
+                () -> new IncompleteDataException("CUID", "ID_ISSUED_AT"));
+        NullBlankUtility.validateNotBlank(newCuid.getIdMain(),
+                () -> new IncompleteDataException("CUID", "ID_MAIN"));
 
 
         if(cuidRepo.existsById(newCuid.getId())){
