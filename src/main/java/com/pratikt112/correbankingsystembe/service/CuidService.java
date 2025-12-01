@@ -6,6 +6,8 @@ import com.pratikt112.correbankingsystembe.exception.IncompleteDataException;
 import com.pratikt112.correbankingsystembe.exception.ValidationException;
 import com.pratikt112.correbankingsystembe.model.cuid.Cuid;
 import com.pratikt112.correbankingsystembe.repo.CuidRepo;
+import com.pratikt112.correbankingsystembe.utility.NullBlankUtility;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class CuidService {
 
@@ -38,6 +41,7 @@ public class CuidService {
         transformCuidListToSave(cuidList);
         for(Cuid entry: cuidList) validateCuid(entry);
         savedCuid = cuidRepo.saveAll(cuidList);
+        log.info("All entries persisted for CIF: {}", cuidList.getFirst().getId().getCustNo());
         return savedCuid;
     }
 
@@ -61,6 +65,7 @@ public class CuidService {
     }
 
     public void validateCuid(Cuid newCuid){
+/*
         if(newCuid.getId()==null ||
                 newCuid.getIdNumber()==null ||
                 newCuid.getIdNumber().isBlank() ||
@@ -72,6 +77,14 @@ public class CuidService {
                 newCuid.getIdMain().isBlank()){
             throw new IncompleteDataException("CUID", "IdIssueDate");      //To be fixed
         }
+*/
+        NullBlankUtility.validateNotNull(newCuid.getId(), "CUID", "CUID_KEY");
+        NullBlankUtility.validateNotBlank(newCuid.getIdNumber(), "CUID", "ID_NUMBER");
+        NullBlankUtility.validateNotNull(newCuid.getIdIssueDate(), "CUID", "ID_ISSUE_DATE");
+        NullBlankUtility.validateNotNull(newCuid.getIdExpiryDate(), "CUID", "ID_EXPIRY_DATE");
+        NullBlankUtility.validateNotBlank(newCuid.getIdIssueAt(), "CUID", "ID_ISSUED_AT");
+        NullBlankUtility.validateNotBlank(newCuid.getIdMain(), "CUID", "ID_MAIN");
+
 
         if(cuidRepo.existsById(newCuid.getId())){
             throw new DuplicateRecordException("CUID", newCuid.getId().getCustNo());
