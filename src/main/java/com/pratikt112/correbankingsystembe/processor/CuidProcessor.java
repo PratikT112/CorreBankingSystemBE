@@ -10,6 +10,7 @@ import com.pratikt112.correbankingsystembe.service.CuidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @Order(4)
+@Validated
 public class CuidProcessor implements CustomerProcessingRule{
     private final CuidRepo cuidRepo;
     private final CuidService cuidService;

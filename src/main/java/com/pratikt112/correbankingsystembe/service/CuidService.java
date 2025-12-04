@@ -7,6 +7,7 @@ import com.pratikt112.correbankingsystembe.exception.ValidationException;
 import com.pratikt112.correbankingsystembe.model.cuid.Cuid;
 import com.pratikt112.correbankingsystembe.repo.CuidRepo;
 import com.pratikt112.correbankingsystembe.utility.NullBlankUtility;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,20 +65,7 @@ public class CuidService {
 
     }
 
-    public void validateCuid(Cuid newCuid){
-/*
-        if(newCuid.getId()==null ||
-                newCuid.getIdNumber()==null ||
-                newCuid.getIdNumber().isBlank() ||
-                newCuid.getIdIssueDate() == null ||
-                newCuid.getIdExpiryDate() == null ||
-                newCuid.getIdIssueAt() == null ||
-                newCuid.getIdIssueAt().isBlank() ||
-                newCuid.getIdMain() == null ||
-                newCuid.getIdMain().isBlank()){
-            throw new IncompleteDataException("CUID", "IdIssueDate");      //To be fixed
-        }
-*/
+    public void validateCuid( Cuid newCuid){
         NullBlankUtility.validateNotNull(newCuid.getId(),
                 () -> new IncompleteDataException("CUID", "CUID_KEY"));
         NullBlankUtility.validateNotBlank(newCuid.getIdNumber(),
@@ -98,10 +86,9 @@ public class CuidService {
 
         if(Objects.equals(newCuid.getIdMain(), "Y")){
             if(cuidRepo.mainIdExists(newCuid.getId().getInstNo(), newCuid.getId().getCustNo())){
-                throw new IllegalArgumentException("Main ID already exists for customer");
-//                throw new ValidationException("VALIDATION_ERROR",
-//                        "Main ID already exists for customer",
-//                        "Invalid ID Issue Date provided");
+                throw new ValidationException("VALIDATION_ERROR",
+                        "Main ID already exists for customer",
+                        "Invalid ID Issue Date provided");
             }
         }
 
