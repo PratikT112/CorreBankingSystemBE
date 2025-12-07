@@ -157,6 +157,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResponseEntity<ErrorResponse> RecordNotFoundException(RecordNotFoundException ex, WebRequest request){
+        logger.error("Record not found exception occurred: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                "RECORD_NOT_FOUND",
+                ex.getMessage(),
+                ex.getUserMessage(),
+                request.getDescription(false).replace("uri=", "")
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+
     @ExceptionHandler(IncompleteDataException.class)
     public ResponseEntity<ErrorResponse> handleIncompleteDataException(IncompleteDataException ex, WebRequest request){
         logger.error("Incomplete data exception occurred: {}", ex.getMessage());
