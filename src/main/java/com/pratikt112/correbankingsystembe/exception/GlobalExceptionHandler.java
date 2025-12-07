@@ -6,7 +6,6 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ReportAsSingleViolation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
