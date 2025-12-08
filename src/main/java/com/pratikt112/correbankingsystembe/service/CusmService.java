@@ -1,5 +1,6 @@
 package com.pratikt112.correbankingsystembe.service;
 
+import com.pratikt112.correbankingsystembe.exception.ValidationException;
 import com.pratikt112.correbankingsystembe.model.cusm.Cusm;
 import com.pratikt112.correbankingsystembe.repo.CusmRepo;
 import jdk.dynalink.linker.LinkerServices;
@@ -39,22 +40,28 @@ public class CusmService {
 
     public void validateCusmEntry(Cusm cusm){
         if(!List.of("01", "02").contains(cusm.getCustomerType())){
-            throw new IllegalArgumentException("Customer Type can either be 01 or 02");
+//            throw new IllegalArgumentException("Customer Type can either be 01 or 02");
+            throw new ValidationException("CUSM_CUSTOMER_TYPE", "Customer Type can either be 01 or 02");
         }
         if(!List.of("000", "999").contains(cusm.getCustomerStatus())){
-            throw new IllegalArgumentException("Customer Status can only be initiated as 000(Active) or 999(Inactive)");
+//            throw new IllegalArgumentException("Customer Status can only be initiated as 000(Active) or 999(Inactive)");
+            throw new ValidationException("CUSM_CUSTOMER_STATUS", "Customer Status can only be initiated as 000(Active) or 999(Inactive)");
         }
         if(!cusm.getCreateDt().equals(LocalDate.now())){
-            throw new IllegalArgumentException("Backdated customer creation not allowed.");
+//            throw new IllegalArgumentException("Backdated customer creation not allowed.");
+            throw new ValidationException("CUSM_CREATE_DT", "Backdated customer creation not allowed.");
         }
         if(hasCrossBorderRiskWithoutRiskCountry(cusm)){
-            throw new IllegalArgumentException("Country of risk needed if cross border risk is selected.");
+//            throw new IllegalArgumentException("Country of risk needed if cross border risk is selected.");
+            throw new ValidationException("CUSM_COUNTRY_OF_RISK", "Country of risk needed if cross border risk is selected.");
         }
         if(!List.of("D", "G", "P", "S", "B").contains(cusm.getSegmentCode())){
             throw new IllegalArgumentException("Invalid customer segment");
+            throw new ValidationException("CUSM_SEGMENT_CODE", "Invalid customer segment");
         }
         if(cusm.getTierCustType().isEmpty()){        // Implement ctpm live fetch
-            throw new IllegalArgumentException("Invalid customer tier type");
+//            throw new IllegalArgumentException("Invalid customer tier type");
+            throw new ValidationException("CUSM_TIER_CUST_TYPE", "Invalid customer tier type");
         }
     }
 

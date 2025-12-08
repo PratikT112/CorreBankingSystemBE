@@ -13,7 +13,7 @@ public class DateConverter {
 
     public static LocalDate toLocalDate(String dateStr){
         if(dateStr == null || dateStr.trim().isEmpty()){
-            throw new IllegalArgumentException("Dat String cannot be null or empty");
+            throw new IllegalArgumentException("Date String cannot be null or empty");
         }
         try{
             return LocalDate.parse(dateStr, FORMATTER);
