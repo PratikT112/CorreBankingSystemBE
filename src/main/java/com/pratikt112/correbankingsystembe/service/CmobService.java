@@ -3,10 +3,7 @@ package com.pratikt112.correbankingsystembe.service;
 
 import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
-import com.pratikt112.correbankingsystembe.exception.DuplicateRecordException;
-import com.pratikt112.correbankingsystembe.exception.IncompleteDataException;
-import com.pratikt112.correbankingsystembe.exception.ProcessingException;
-import com.pratikt112.correbankingsystembe.exception.ValidationException;
+import com.pratikt112.correbankingsystembe.exception.*;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
 import com.pratikt112.correbankingsystembe.model.mbex.Mbex;
@@ -99,7 +96,7 @@ public class CmobService {
 //    }
 
     public List<String> OcomFromCmob(String socNo, String custNo){
-        List<Cmob> mobileNos = cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo).orElseThrow(()->new IllegalArgumentException("No customer record found"));
+        List<Cmob> mobileNos = cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo).orElseThrow(()-> new RecordNotFoundException("CMOB", "No customer record found"));
         if(mobileNos.size() == 1){
             return tryPermanent(mobileNos);
         } else if (mobileNos.size() == 2){
@@ -138,7 +135,7 @@ public class CmobService {
 
     public boolean isTempMobileValid(Cmob cmob){
         String mbexExpDt = mbexRepo.getMobExpDtById(new MbexId(cmob.getId().getSocNo(), cmob.getId().getCustNo()))
-                .orElseThrow(()->new IllegalArgumentException("No expiry date found for temporary mobile"));
+                .orElseThrow(()->new RecordNotFoundException("RECORD_NOT_FOUND", "No expiry date found for temporary mobile", "Kindly check mobile number and try again"));
         return DateConverter.compareDate(mbexExpDt, dateUtil.getCurrentDateInDDMMYYYY()) > 0;
     }
 
@@ -169,7 +166,7 @@ public class CmobService {
     }
 
     public List<Cmob> searchCmobByCustNo(String socNo, String custNo) {
-        return cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo).orElseThrow(()->new IllegalArgumentException("No customer record found"));
+        return cmobRepo.findByIdSocNoAndIdCustNo(socNo, custNo).orElseThrow(()->new RecordNotFoundException("CMOB", custNo));
     }
 
     public List<Cmob> saveTwoCmobEntries(Cmob first, Cmob second){
@@ -355,13 +352,19 @@ public class CmobService {
                 throw new IllegalArgumentException("Required Parameters not provided.");
             }
 
-            Cmob toBeAmended = cmobRepo.findById(new CmobId(socNo, custNo, identifier)).orElseThrow(()-> new IllegalArgumentException("Customer Record not found"));
+            Cmob toBeAmended = cmobRepo.findById(new CmobId(socNo, custNo, identifier)).orElseThrow(()-> new RecordNotFoundException("CMOB", custNo));
             if(Objects.equals(toBeAmended.getIsdCode(), newIsdCode) && Objects.equals(toBeAmended.getCustMobNo(), newCustMobNo)){
-                throw new IllegalArgumentException("Previous and New Mobile numbers cannot be the same");
+//                throw new IllegalArgumentException();
+                throw new ValidationException("AMENDMENT_EXCEPTION",
+                        "Previous and New Mobile numbers cannot be the same",
+                        "Provide a different mobile number for amendment");
             }
 
             if(!Objects.equals(toBeAmended.getVerifyFlag(), VerifyFlag.Y)){
-                throw new IllegalArgumentException("Previous Mobile number not verified");
+//                throw new IllegalArgumentException("Previous Mobile number not verified");
+                throw new ValidationException("AMENDMENT_EXCEPTION",
+                        "Previous Mobile number not verified",
+                        "Previous Mobile number should be verified before amendment");
             }
 
             toBeAmended.setOldMobIsdCode(toBeAmended.getIsdCode());
@@ -384,19 +387,27 @@ public class CmobService {
     public Cmob verifyMobile(String socNo, String custNo, String isdCode, String custMobNo, String verifyFlag) {
         Cmob toBeVerified = (Cmob) findForVerification(socNo, custNo, isdCode, custMobNo).getFirst();
         if (toBeVerified == null) {
-            throw new IllegalArgumentException("Record not found for customer and mobile");
+//            throw new IllegalArgumentException("Record not found for customer and mobile");
+            throw new RecordNotFoundException("CMOB", "Record not found for CIF: " + custNo + " and mobile: " + custMobNo);
         }
 
         if (toBeVerified.getVerifyFlag().equals(VerifyFlag.Y)) {
-            throw new IllegalArgumentException("Mobile number is already verified");
+//            throw new IllegalArgumentException("Mobile number is already verified");
+            throw new ValidationException("CMOB_VERIFY_FLAG", "Mobile number is already verified");
         }
 
         if (toBeVerified.getVerifyFlag().equals(VerifyFlag.S)) {
-            throw new IllegalArgumentException("Verification not applicable for Non Personal Customers");
+//            throw new IllegalArgumentException("Verification not applicable for Non Personal Customers");
+            throw new ProcessingException("NOT_APPLICABLE_EXCEPTION",
+                    "Verification not applicable for Non Personal Customers",
+                    "Verification is only applicable for personal customers");
         }
 
         if (toBeVerified.getVerifyFlag().equals(VerifyFlag.X)) {
-            throw new IllegalArgumentException("Verification not applicable for Cancelled Mobile Number");
+//            throw new IllegalArgumentException("Verification not applicable for Cancelled Mobile Number");
+            throw new ProcessingException("NOT_APPLICABLE_EXCEPTION",
+                    "Verification not applicable for cancelled mobile numbers.",
+                    "Verification is only applicable for active mobile numbers.");
         }
 
         toBeVerified.setVerifyFlag(VerifyFlag.Y);

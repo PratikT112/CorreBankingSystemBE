@@ -24,7 +24,8 @@ public class CustomerController {
             customerOrchestratorService.createCustomer(cobData);
             return new ResponseEntity<>("Customer created Successfully", HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw e;
         }
     }
 }

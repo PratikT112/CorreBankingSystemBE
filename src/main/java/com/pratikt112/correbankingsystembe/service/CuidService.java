@@ -1,18 +1,24 @@
 package com.pratikt112.correbankingsystembe.service;
 
 import com.pratikt112.correbankingsystembe.config.SystemDateProvider;
-import com.pratikt112.correbankingsystembe.exception.BankingSystemException;
 import com.pratikt112.correbankingsystembe.exception.DuplicateRecordException;
 import com.pratikt112.correbankingsystembe.exception.IncompleteDataException;
 import com.pratikt112.correbankingsystembe.exception.ValidationException;
 import com.pratikt112.correbankingsystembe.model.cuid.Cuid;
 import com.pratikt112.correbankingsystembe.repo.CuidRepo;
+import com.pratikt112.correbankingsystembe.utility.NullBlankUtility;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class CuidService {
 
@@ -30,16 +36,49 @@ public class CuidService {
         return persistCuid(newCuid);
     }
 
-    public void validateCuid(Cuid newCuid){
+    @Transactional
+    public List<Cuid> saveCuid(List<Cuid> cuidList){
+        List<Cuid> savedCuid = new ArrayList<Cuid>();
+        transformCuidListToSave(cuidList);
+        for(Cuid entry: cuidList) validateCuid(entry);
+        savedCuid = cuidRepo.saveAll(cuidList);
+        log.info("All entries persisted for CIF: {}", cuidList.getFirst().getId().getCustNo());
+        return savedCuid;
+    }
 
-        if(newCuid.getId()==null ||
-                newCuid.getIdNumber()==null ||
-                newCuid.getIdIssueDate() == null ||
-                newCuid.getIdExpiryDate() == null ||
-                newCuid.getIdIssueAt() == null ||
-                newCuid.getIdMain() == null){
-            throw new IncompleteDataException("CUID", "IdIssueDate");      //To be fixed
+    private void transformCuidListToSave(List<Cuid> cuidList) {
+        Cuid idMain = cuidList.stream()
+                .filter(x->"Y".equals(x.getIdMain()))
+                .findFirst()
+                .orElse(null);
+        if(idMain != null){
+            cuidList.remove(idMain);
+            cuidList.addFirst(idMain);
+        } else {
+            throw new IncompleteDataException("REQUIRED_ID_NOT_PROVIDED",
+                    "Main ID not provided for customer",
+                    "At least one of the IDs provided has to have ID_MAIN as Y");
         }
+
+        List<Cuid> remaining = cuidList.subList(1, cuidList.size());
+        remaining.sort(Comparator.comparingInt(c->Integer.parseInt(c.getId().getIdType())));
+
+    }
+
+    public void validateCuid( Cuid newCuid){
+        NullBlankUtility.validateNotNull(newCuid.getId(),
+                () -> new IncompleteDataException("CUID", "CUID_KEY"));
+        NullBlankUtility.validateNotBlank(newCuid.getIdNumber(),
+                () -> new IncompleteDataException("CUID", "ID_NUMBER"));
+        NullBlankUtility.validateNotNull(newCuid.getIdIssueDate(),
+                () -> new IncompleteDataException("CUID", "ID_ISSUE_DATE"));
+        NullBlankUtility.validateNotNull(newCuid.getIdExpiryDate(),
+                () -> new IncompleteDataException("CUID", "ID_EXPIRY_DATE"));
+        NullBlankUtility.validateNotBlank(newCuid.getIdIssueAt(),
+                () -> new IncompleteDataException("CUID", "ID_ISSUED_AT"));
+        NullBlankUtility.validateNotBlank(newCuid.getIdMain(),
+                () -> new IncompleteDataException("CUID", "ID_MAIN"));
+
 
         if(cuidRepo.existsById(newCuid.getId())){
             throw new DuplicateRecordException("CUID", newCuid.getId().getCustNo());
@@ -47,15 +86,13 @@ public class CuidService {
 
         if(Objects.equals(newCuid.getIdMain(), "Y")){
             if(cuidRepo.mainIdExists(newCuid.getId().getInstNo(), newCuid.getId().getCustNo())){
-                throw new IllegalArgumentException("Main ID already exists for customer");
-//                throw new ValidationException("VALIDATION_ERROR",
-//                        "Main ID already exists for customer",
-//                        "Invalid ID Issue Date provided");
+                throw new ValidationException("VALIDATION_ERROR",
+                        "Main ID already exists for customer",
+                        "Invalid ID Issue Date provided");
             }
         }
 
         if(newCuid.getIdIssueDate().isAfter(SystemDateProvider.getSystemDate())){
-//            throw new IllegalArgumentException("Id Issue Date should not be future date");
             throw new ValidationException("VALIDATION_ERROR",
                     "Id Issue Date should not be future date",
                     "Invalid ID Issue Date provided");

@@ -56,6 +56,6 @@ public class Cusvdd {
     private String postcode;
 
     @Column(name = "THRE_LIM", precision = 14, scale = 0)
-    @Digits(integer = 14, fraction = 0, message = "Threshold Limit must be between of maximum 14 digits")
+    @Digits(integer = 14, fraction = 2, message = "Threshold Limit must be of maximum 14 digits")
     private BigDecimal threLim;
 }

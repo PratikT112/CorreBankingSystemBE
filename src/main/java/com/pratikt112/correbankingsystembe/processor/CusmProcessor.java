@@ -58,21 +58,22 @@ public class CusmProcessor implements CustomerProcessingRule{
         constructed.setCustomerType("01");
         constructed.setMailIndExpDt(SystemDateProvider.getSystemDate());
         constructed.setDomesticRisk("00");
-        constructed.setCrossBorderRisk("00");
+//        constructed.setCrossBorderRisk("00");
         constructed.setLastUsedAcctNo(newCIF);
         constructed.setCustomerStatus("000");
         constructed.setSegmentCode("D");
         constructed.setCreateDt(SystemDateProvider.getSystemDate());
         constructed.setHomeBranchNo("04234");    // To be fixed
-        constructed.setCountryOfRisk(cobData.getCustISO3166CountryJurisResi()); // To be fixed
+//        constructed.setCountryOfRisk(cobData.getCustISO3166CountryJurisResi()); // To be fixed
         constructed.setTierCustType(cobData.getCustTierType());
         constructed.setMislaOrgCode(getMislaFromGender(cobData.getCustGender()));
         constructed.setBsrOrgCode(getBSRFromGender(cobData.getCustGender()));
         constructed.setResiStatus(cobData.getResiStatus());
+        constructed.setNationalityCd(cobData.getCustNationality());
         constructed.setLastStatChgDt(SystemDateProvider.getSystemDate());
-        constructed.setDeliveryMode(cobData.getInbDeliveryMode());
+//        constructed.setDeliveryMode(cobData.getInbDeliveryMode());
         constructed.setCustTaxPan(cobData.getCustPanNo());
-        constructed.setCustVoterId(Objects.equals(cobData.getCustOvdDetails().getOvdDocType(), "02") ? cobData.getCustOvdDetails().getOvdDocNumber() : " " );
+//        constructed.setCustVoterId(Objects.equals(cobData.getCustOvdDetails().stream().filter(x->x.getOvdDocType().equals("0002")).findFirst(), "02") ? cobData.getCustOvdDetails().getOvdDocNumber() : " " );
         constructed.setCustEvalFlag("Y");
         constructed.setPostCheckerId("2199690");
         return constructed;

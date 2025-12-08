@@ -4,7 +4,6 @@ package com.pratikt112.correbankingsystembe.contoller;
 import com.pratikt112.correbankingsystembe.model.cr60.Cr60;
 import com.pratikt112.correbankingsystembe.service.Cr60Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
