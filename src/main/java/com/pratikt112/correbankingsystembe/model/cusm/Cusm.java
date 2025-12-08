@@ -2,6 +2,7 @@ package com.pratikt112.correbankingsystembe.model.cusm;
 
 import com.pratikt112.correbankingsystembe.utility.DdMmYyyyStringToLocalDateConverter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -93,6 +94,10 @@ public class Cusm implements Serializable {
 
     @Column(name = "POST_CHECKER_ID", length = 7)
     private String postCheckerId;
+
+    @NotBlank(message = "NATIONALITY CODE cannot be blank")
+    @Column(name = "NATIONALITY_CD", length = 3)
+    private String nationalityCd;
 
 
     @PrePersist

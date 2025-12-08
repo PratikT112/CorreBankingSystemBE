@@ -69,6 +69,7 @@ public class CusmProcessor implements CustomerProcessingRule{
         constructed.setMislaOrgCode(getMislaFromGender(cobData.getCustGender()));
         constructed.setBsrOrgCode(getBSRFromGender(cobData.getCustGender()));
         constructed.setResiStatus(cobData.getResiStatus());
+        constructed.setNationalityCd(cobData.getCustNationality());
         constructed.setLastStatChgDt(SystemDateProvider.getSystemDate());
 //        constructed.setDeliveryMode(cobData.getInbDeliveryMode());
         constructed.setCustTaxPan(cobData.getCustPanNo());

@@ -34,6 +34,9 @@ public class ProcessorList {
     @Autowired
     CusvddProcessor cusvddProcessor;
 
+    @Autowired
+    PsofProcessor psofProcessor;
+
     private List<CustomerProcessingRule> processingRules = new ArrayList<>();
 
     public ProcessorList(){
@@ -42,6 +45,7 @@ public class ProcessorList {
         processingRules.add(cmobProcessor);
         processingRules.add(cuidProcessor);
         processingRules.add(cusvaaProcessor);
-        processingRules.add(cusvaaProcessor);
+        processingRules.add(cusvddProcessor);
+        processingRules.add(psofProcessor);
     }
 }

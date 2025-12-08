@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Slf4j
@@ -67,6 +68,7 @@ public class CustomerFetchAggregator {
                     return new RecordNotFoundException("CUSVDD", cifNo);
                 });
 
+        return null;
     }
 
     private CobData constructCobToCompare(Cusm fetchedCusm, Cr60 fetchedCr60, Cmob fetchedCmob, Cuid fetchedCuid, Cusvaa fetchedCusvaa, Cusvdd fetchedCusvdd){
@@ -92,7 +94,9 @@ public class CustomerFetchAggregator {
         constructed.setCustNationality(fetchedCusvaa.getCountryCode());
         constructed.setCustOccType(fetchedCusvdd.getOccupationCode());
         constructed.setCustOccSubType(fetchedCusvdd.getOccupDesc());      //To be checked
-//        constructed.setCustAnnIncome(fetchedCusva);
+        constructed.setCustAnnIncome(BigDecimal.valueOf(1200000));
+        constructed.setCustNetWorth(BigDecimal.valueOf(2400000));
+//        constructed.setCustReligion(fetchedCusvaa.ge);
 
         return constructed;
     }
