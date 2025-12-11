@@ -56,7 +56,7 @@ public class CusmService {
             throw new ValidationException("CUSM_COUNTRY_OF_RISK", "Country of risk needed if cross border risk is selected.");
         }
         if(!List.of("D", "G", "P", "S", "B").contains(cusm.getSegmentCode())){
-            throw new IllegalArgumentException("Invalid customer segment");
+//            throw new IllegalArgumentException("Invalid customer segment");
             throw new ValidationException("CUSM_SEGMENT_CODE", "Invalid customer segment");
         }
         if(cusm.getTierCustType().isEmpty()){        // Implement ctpm live fetch
