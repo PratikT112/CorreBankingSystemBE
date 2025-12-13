@@ -21,8 +21,8 @@ public class CustomerController {
     @PostMapping("/CIF/new")
     public ResponseEntity<String> createNewCustomer(@RequestBody CobData cobData){
         try{
-            customerOrchestratorService.createCustomer(cobData);
-            return new ResponseEntity<>("Customer created Successfully", HttpStatus.CREATED);
+            String commitedCIF = customerOrchestratorService.createCustomer(cobData);
+            return new ResponseEntity<>("Customer created Successfully. CIF number: " + commitedCIF, HttpStatus.CREATED);
         } catch (Exception e) {
 //            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
             throw e;

@@ -24,7 +24,7 @@ public class CustomerOrchestratorService {
     }
 
     @Transactional
-    public void createCustomer(CobData cobData){
+    public String createCustomer(CobData cobData){
         String newCIF = cifGeneratorService.generateCif();
         log.info("Generated new CIF: {}", newCIF);
 
@@ -34,6 +34,7 @@ public class CustomerOrchestratorService {
                 processor.process(cobData, newCIF);
             }
         }
+        return newCIF;
     }
 
     public void amendCustomer(CobData newCobData){
