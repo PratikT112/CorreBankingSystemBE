@@ -1,5 +1,6 @@
 package com.pratikt112.correbankingsystembe.repo;
 
+import com.pratikt112.correbankingsystembe.DTOs.projections.custIdDetailsPrimary;
 import com.pratikt112.correbankingsystembe.model.cuid.Cuid;
 import com.pratikt112.correbankingsystembe.model.cuid.CuidId;
 import jakarta.validation.constraints.Size;
@@ -26,4 +27,7 @@ public interface CuidRepo extends JpaRepository<Cuid, CuidId> {
 
     @Query(value = "SELECT SUBSTRING(c.id.custNo, LENGTH(c.id.custNo) - 9, 10 )  FROM Cuid c WHERE c.id.idType = :idType AND c.idNumber = :idNumber")
     List<String> IdAlreadyExistsCIF(@Param("idType") String idType, @Param("idNumber") @Size(max = 24, message = "idNumber must be at most 24 characters") String idNumber);
+
+    @Query(value = "SELECT c.idMain as idMain, c.idNumber as idNumber from Cuid c where c.id.custNo LIKE CONCAT('%', :custNo, '%')" )
+    List<custIdDetailsPrimary> testQuery(@Param("custNo") String custNo);
 }

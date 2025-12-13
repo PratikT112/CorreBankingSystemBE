@@ -62,6 +62,8 @@ public class CobData {
 //    private OvdDetails custOvdDetails;
     private List<OvdDetails> custOvdDetails;
     private AddressDetails custMainAddressDetails;
+    private String custConsent;
+    private LocalDate custConsentDate;
 //    private boolean sameAsPOA;
 //    private AddressDetails custAltAddressDetails;
 //    private String deemedOVDDocType;
