@@ -33,7 +33,7 @@ public class Turn {
     @Column(name = "CONSENT_DATA", nullable = false, length = 1)
     private String consentData = "N";
 
-    @NotBlank(message = "CONSENT_DATA_DT must not be blank")
+    @NotNull(message = "CONSENT_DATA_DT must not be blank")
     @Column(name = "CONSENT_DATA_DT", nullable = false, length = 8)
     @Convert(converter = DdMmYyyyStringToLocalDateConverter.class)
     private LocalDate consentDataDt;

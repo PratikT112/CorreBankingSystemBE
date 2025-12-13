@@ -37,6 +37,10 @@ public class ProcessorList {
     @Autowired
     PsofProcessor psofProcessor;
 
+    @Autowired
+    TurnProcessor turnProcessor;
+
+
     private List<CustomerProcessingRule> processingRules = new ArrayList<>();
 
     public ProcessorList(){
