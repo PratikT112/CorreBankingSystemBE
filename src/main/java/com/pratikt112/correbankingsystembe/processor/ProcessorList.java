@@ -40,6 +40,9 @@ public class ProcessorList {
     @Autowired
     TurnProcessor turnProcessor;
 
+    @Autowired
+    CpanProcessor cpanProcessor;
+
 
     private List<CustomerProcessingRule> processingRules = new ArrayList<>();
 
@@ -51,5 +54,7 @@ public class ProcessorList {
         processingRules.add(cusvaaProcessor);
         processingRules.add(cusvddProcessor);
         processingRules.add(psofProcessor);
+        processingRules.add(turnProcessor);
+        processingRules.add(cpanProcessor);
     }
 }
