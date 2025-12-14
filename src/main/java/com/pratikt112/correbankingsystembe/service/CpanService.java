@@ -25,7 +25,7 @@ public class CpanService {
         String existingCustomer = cpanRepo.getExistingCustomerByCustPanNo(newCpan.getCustPanNo());
         if(existingCustomer != null){
             throw new DuplicateRecordException("DUPLICATE_RECORD_ERROR",
-                    "PAN already exists for CIF: "+ existingCustomer,
+                    "PAN already exists for CIF: "+ existingCustomer.substring(6),
                     "PAN already exists for other CIF. Recheck and try again.");
         }
     }
