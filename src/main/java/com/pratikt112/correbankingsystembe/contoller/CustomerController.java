@@ -2,6 +2,7 @@ package com.pratikt112.correbankingsystembe.contoller;
 
 import com.pratikt112.correbankingsystembe.DTOs.CobData;
 import com.pratikt112.correbankingsystembe.service.CustomerOrchestratorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,13 @@ public class CustomerController {
     }
 
     @PostMapping("/CIF/new")
-    public ResponseEntity<String> createNewCustomer(@RequestBody CobData cobData){
+    public ResponseEntity<String> createNewCustomer(@Valid @RequestBody CobData cobData){
         try{
             String commitedCIF = customerOrchestratorService.createCustomer(cobData);
             return new ResponseEntity<>("Customer created Successfully. CIF number: " + commitedCIF, HttpStatus.CREATED);
         } catch (Exception e) {
-//            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            throw e;
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//            throw e;
         }
     }
 }

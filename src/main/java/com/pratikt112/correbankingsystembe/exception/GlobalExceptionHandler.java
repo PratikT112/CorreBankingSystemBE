@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -49,13 +50,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, WebRequest request){
-        logger.warn("Validation exception occurred: {}", ex.getMessage());
 
         String validationErrors = ex.getBindingResult()
-                .getFieldErrors()
+                .getAllErrors()
                 .stream()
-                .map(FieldError::getDefaultMessage)
+                .map(ObjectError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
+
+        logger.warn("Validation exception occurred: {}", validationErrors);
 
         ErrorResponse errorResponse = new ErrorResponse(
                 "VALIDATION_ERROR",

@@ -1,5 +1,6 @@
 package com.pratikt112.correbankingsystembe.DTOs;
 
+import com.pratikt112.correbankingsystembe.validatoin.annotation.ValidPanOrForm60;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ValidPanOrForm60
 public class CobData {
     // System
     private LocalDate regionDate;
