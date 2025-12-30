@@ -1,6 +1,6 @@
 package com.pratikt112.correbankingsystembe.DTOs;
 
-import com.pratikt112.correbankingsystembe.validatoin.annotation.ValidPanOrForm60;
+import com.pratikt112.correbankingsystembe.validation.annotation.ValidPanOrForm60;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

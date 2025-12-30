@@ -129,8 +129,8 @@ public class Cky1 {
     @Column(name = "SCRT_FLAG", length = 1)
     private String scrtFlag;
 
-    @Column(name = "PREFIX3", length = 2)
-    private String prefix3;
+    @Column(name = "PREFIX4", length = 2)
+    private String prefix4;
 
     @Column(name = "SPOUSE_FIRST_NAME", length = 40)
     private String spouseFirstName;

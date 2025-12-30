@@ -1,7 +1,7 @@
-package com.pratikt112.correbankingsystembe.validatoin.annotation;
+package com.pratikt112.correbankingsystembe.validation.annotation;
 
 
-import com.pratikt112.correbankingsystembe.validatoin.validator.PanOrForm60Validator;
+import com.pratikt112.correbankingsystembe.validation.validator.PanOrForm60Validator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

@@ -1,7 +1,7 @@
-package com.pratikt112.correbankingsystembe.validatoin.validator;
+package com.pratikt112.correbankingsystembe.validation.validator;
 
 import com.pratikt112.correbankingsystembe.DTOs.CobData;
-import com.pratikt112.correbankingsystembe.validatoin.annotation.ValidPanOrForm60;
+import com.pratikt112.correbankingsystembe.validation.annotation.ValidPanOrForm60;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
