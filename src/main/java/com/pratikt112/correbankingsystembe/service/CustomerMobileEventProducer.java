@@ -13,10 +13,10 @@ public class CustomerMobileEventProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publishCustomerCreated(MobileVerificationEventRecord record){
+    public void publishCustomerCreated(MobileVerificationEventRecord rec){
         kafkaTemplate.send("customer.mobile.created",
-                record.getCustomerId(),
-                record
+                rec.getCustNo(),
+                rec
         );
     }
 }
