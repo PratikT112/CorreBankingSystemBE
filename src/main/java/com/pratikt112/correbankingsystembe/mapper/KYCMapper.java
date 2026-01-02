@@ -51,6 +51,7 @@ public final class KYCMapper{
         constructed.setIdOther("DUMMY OTHER ID");
         constructed.setDocType("DD");
         constructed.setAddType("MA");
-        constructed.setAddProof();
+//        constructed.setAddProof();
+        return null;
     }
 }
