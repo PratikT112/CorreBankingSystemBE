@@ -1,7 +1,7 @@
 package com.pratikt112.correbankingsystembe.service;
 
+import com.pratikt112.banking.event.MobileVerificationEventRecord;
 import com.pratikt112.correbankingsystembe.DTOs.CobData;
-import com.pratikt112.correbankingsystembe.event.MobileVerificationEventRecord;
 import com.pratikt112.correbankingsystembe.model.cusm.Cusm;
 import com.pratikt112.correbankingsystembe.processor.CustomerProcessingRule;
 import com.pratikt112.correbankingsystembe.repo.CusmRepo;

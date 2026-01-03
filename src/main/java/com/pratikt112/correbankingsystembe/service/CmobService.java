@@ -1,6 +1,7 @@
 package com.pratikt112.correbankingsystembe.service;
 
 
+import com.pratikt112.banking.event.MobileAcknowledgementEventRecord;
 import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.exception.*;
@@ -17,14 +18,18 @@ import com.pratikt112.correbankingsystembe.repo.MobhRepo;
 import com.pratikt112.correbankingsystembe.utility.DateConverter;
 import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
 import com.pratikt112.correbankingsystembe.utility.TimeUtilityHHMMSSmmm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Service
 public class CmobService {
 
@@ -414,4 +419,36 @@ public class CmobService {
         toBeVerified.setDov(LocalDate.now());
         return persistCmobAndMobh(List.of(toBeVerified)).get(0);
     }
+
+    @KafkaListener(
+            topics = "customer.mobile.acknowledge",
+            groupId = "mobile-verification-group"
+    )
+    @Transactional
+    public void verifyMobileFromKafkaQueue(MobileAcknowledgementEventRecord rec){
+
+        try {
+            int rowsUpdated = cmobRepo.verifyMobileNumber(new CmobId(rec.getSocNo(), rec.getCustNo(), "Y"), rec.getMobileNumber(), rec.getIsdCode(), DateUtilityDDMMYYYY.getSCurrentDateInDDMMYYYY());
+            if(rowsUpdated == 0){
+                throw new RecordNotFoundException("RECORD_NOT_FOUND", "No CMOB record verified for customer" + rec.getCustNo(), "Mobile for verification not found for customer.");
+            }
+            Optional<Cmob> fetchedNew = cmobRepo.findById(new CmobId(rec.getSocNo(), rec.getCustNo(), "Y"));
+            Cmob fetchedCmob = fetchedNew.orElseThrow(()->new RecordNotFoundException("CMOB_RECORD_NOT_FOUND", "CMOB not found after verification for customer: " + rec.getCustNo(), "No CMOB record found post verification"));
+            Mobh newMobh = new Mobh(new MobhId(rec.getSocNo(), rec.getCustNo(), LocalDate.now(), DateUtilityDDMMYYYY.getCurrentTimeHhMmSsWww()),
+                    fetchedCmob.getCustMobNo(),
+                    fetchedCmob.getOldCustMobNo(),
+                    fetchedCmob.getIsdCode(),
+                    "2199691",
+                    "2199693",
+                    "K",
+                    fetchedCmob.getId().getIdentifier(),
+                    fetchedCmob.getVerifyFlag().toString());
+            mobhRepo.save(newMobh);
+            log.info("Verification successful for customer: {} with mobile number: {}", rec.getCustNo(), rec.getMobileNumber());
+        } catch (Exception e){
+            log.error("Failed to process mobile verification for customer: {}", rec.getCustNo(), e);
+            throw e;
+        }
+    }
+
 }
