@@ -1,5 +1,6 @@
 package com.pratikt112.correbankingsystembe.service;
 
+import com.pratikt112.correbankingsystembe.exception.DuplicateRecordException;
 import com.pratikt112.correbankingsystembe.exception.IncompleteDataException;
 import com.pratikt112.correbankingsystembe.exception.ValidationException;
 import com.pratikt112.correbankingsystembe.model.cusvdd.Cusvdd;
@@ -50,6 +51,9 @@ public class CusvddService {
         }
         if(newCusvdd.getPostcode() == null || newCusvdd.getPostcode().isBlank()){
             throw new IncompleteDataException("CUSVDD", "POST_CODE");
+        }
+        if(cusvddRepo.existsById(newCusvdd.getKey1())){
+            throw new DuplicateRecordException("CUSVDD", newCusvdd.getKey1());
         }
     }
 

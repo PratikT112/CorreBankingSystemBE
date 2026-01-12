@@ -4,9 +4,13 @@ package com.pratikt112.correbankingsystembe.repo;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +29,16 @@ public interface CmobRepo extends JpaRepository<Cmob, CmobId> {
 
     List<Cmob> findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(String socNo, String custNo, String isdCode, String custMobNo);
 
-
     List<Cmob> id(CmobId id);
+
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Cmob c set c.verifyFlag = com.pratikt112.correbankingsystembe.enums.VerifyFlag.Y, c.dov = :dov where c.id.socNo = :socNo and c.id.custNo = :custNo and c.id.identifier = :identifier and c.custMobNo = :mobileNumber and c.isdCode = :isdCode")
+    int verifyMobileNumber(@Param("socNo") String socNo,
+                           @Param("custNo") String custNo,
+                           @Param("identifier") String identifier,
+                           @Param("mobileNumber") String mobileNumber,
+                           @Param("isdCode") String isdCode,
+                           @Param("dov") LocalDate dov);
 }

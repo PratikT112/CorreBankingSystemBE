@@ -50,7 +50,7 @@ public class cmobController {
     public ResponseEntity<?> saveCmob(@RequestBody List<Cmob> cmobList){
         try {
             List<Cmob> saved = cmobService.saveCmob(cmobList);
-            return new ResponseEntity<List<Cmob>>(saved, HttpStatus.OK);
+            return new ResponseEntity<List<Cmob>>(saved, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -66,6 +66,7 @@ public class CuidService {
     }
 
     public void validateCuid( Cuid newCuid){
+        log.info("Validating CUID {}", newCuid.getIdNumber());
         NullBlankUtility.validateNotNull(newCuid.getId(),
                 () -> new IncompleteDataException("CUID", "CUID_KEY"));
         NullBlankUtility.validateNotBlank(newCuid.getIdNumber(),
@@ -81,11 +82,13 @@ public class CuidService {
 
 
         if(cuidRepo.existsById(newCuid.getId())){
+            log.info("Validation failed for CUID: {}", newCuid.getIdNumber());
             throw new DuplicateRecordException("CUID", newCuid.getId().getCustNo());
         }
 
         if(Objects.equals(newCuid.getIdMain(), "Y")){
             if(cuidRepo.mainIdExists(newCuid.getId().getInstNo(), newCuid.getId().getCustNo())){
+                log.info("Validation failed for CUID: {}", newCuid.getIdNumber());
                 throw new ValidationException("VALIDATION_ERROR",
                         "Main ID already exists for customer",
                         "Invalid ID Issue Date provided");
@@ -93,12 +96,14 @@ public class CuidService {
         }
 
         if(newCuid.getIdIssueDate().isAfter(SystemDateProvider.getSystemDate())){
+            log.info("Validation failed for CUID: {}", newCuid.getIdNumber());
             throw new ValidationException("VALIDATION_ERROR",
                     "Id Issue Date should not be future date",
                     "Invalid ID Issue Date provided");
         }
 
         if(newCuid.getIdExpiryDate().isBefore(SystemDateProvider.getSystemDate())){
+            log.info("Validation failed for CUID: {}", newCuid.getIdNumber());
             throw new ValidationException("VALIDATION_ERROR",
                     "Id Expiry Date must be future date",
                     "Invalid ID Expiry Date provided");
@@ -108,11 +113,12 @@ public class CuidService {
         String dupCIFNo = dupCIFList.isEmpty() ? null : dupCIFList.getFirst();
         if(dupCIFNo!=null){
 //            throw new IllegalArgumentException("Id already exists for CIF: "+ dupCIFNo);
+            log.info("Validation failed for CUID: {}", newCuid.getIdNumber());
             throw new DuplicateRecordException("DUPLICATE_RECORD_ERROR",
                     "Id already exists for CIF: "+ dupCIFNo,
                     "Id already exists for other CIF. Recheck and try again.");
         }
-
+        log.info("Validated CUID {} successfully", newCuid.getIdNumber());
     }
 
     public Cuid persistCuid(Cuid newCuid){
