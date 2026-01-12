@@ -25,7 +25,7 @@ public class CustomerController {
             String commitedCIF = customerOrchestratorService.createCustomer(cobData);
             return new ResponseEntity<>("Customer created Successfully. CIF number: " + commitedCIF, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 //            throw e;
         }
     }

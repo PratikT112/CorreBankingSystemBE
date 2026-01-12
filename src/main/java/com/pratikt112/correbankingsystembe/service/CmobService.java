@@ -428,13 +428,17 @@ public class CmobService {
     public void verifyMobileFromKafkaQueue(MobileAcknowledgementEventRecord rec){
 
         try {
-            int rowsUpdated = cmobRepo.verifyMobileNumber(new CmobId(rec.getSocNo(), rec.getCustNo(), "Y"), rec.getMobileNumber(), rec.getIsdCode(), DateUtilityDDMMYYYY.getSCurrentDateInDDMMYYYY());
-            if(rowsUpdated == 0){
-                throw new RecordNotFoundException("RECORD_NOT_FOUND", "No CMOB record verified for customer" + rec.getCustNo(), "Mobile for verification not found for customer.");
-            }
-            Optional<Cmob> fetchedNew = cmobRepo.findById(new CmobId(rec.getSocNo(), rec.getCustNo(), "Y"));
-            Cmob fetchedCmob = fetchedNew.orElseThrow(()->new RecordNotFoundException("CMOB_RECORD_NOT_FOUND", "CMOB not found after verification for customer: " + rec.getCustNo(), "No CMOB record found post verification"));
-            Mobh newMobh = new Mobh(new MobhId(rec.getSocNo(), rec.getCustNo(), LocalDate.now(), DateUtilityDDMMYYYY.getCurrentTimeHhMmSsWww()),
+            LocalDate dov = LocalDate.now();
+            log.info("DEBUG Pointer, {}, {}, {}, {}, {}",rec.getCustNo(), rec.getSocNo(), rec.getMobileNumber(), rec.getIsdCode(), dov);
+            Cmob fetchedCmob = cmobRepo.findById(new CmobId(rec.getSocNo(), rec.getCustNo(), "P"))
+                    .orElseThrow(()->new RecordNotFoundException("RECORD_NOT_FOUND", "No CMOB record verified for customer" + rec.getCustNo(), "Mobile for verification not found for customer."));
+
+            fetchedCmob.setDov(LocalDate.now());
+            fetchedCmob.setVerifyFlag(VerifyFlag.Y);
+            cmobRepo.save(fetchedCmob);
+
+
+            Mobh newMobh = new Mobh(new MobhId(rec.getSocNo(), rec.getCustNo(), LocalDate.now(), DateUtilityDDMMYYYY.getCurrentTimeHhMmSsWww().substring(0, 9)),
                     fetchedCmob.getCustMobNo(),
                     fetchedCmob.getOldCustMobNo(),
                     fetchedCmob.getIsdCode(),

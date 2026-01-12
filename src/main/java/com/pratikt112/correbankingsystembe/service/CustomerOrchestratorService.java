@@ -2,6 +2,7 @@ package com.pratikt112.correbankingsystembe.service;
 
 import com.pratikt112.banking.event.MobileVerificationEventRecord;
 import com.pratikt112.correbankingsystembe.DTOs.CobData;
+import com.pratikt112.correbankingsystembe.kafka.CustomerMobileEventProducer;
 import com.pratikt112.correbankingsystembe.model.cusm.Cusm;
 import com.pratikt112.correbankingsystembe.processor.CustomerProcessingRule;
 import com.pratikt112.correbankingsystembe.repo.CusmRepo;
@@ -19,14 +20,15 @@ import java.util.List;
 public class CustomerOrchestratorService {
     private final List<CustomerProcessingRule> processors;
 
-    @Autowired
-    CifGeneratorService cifGeneratorService;
 
-    @Autowired
-    CustomerMobileEventProducer customerMobileEventProducer;
+    private final CifGeneratorService cifGeneratorService;
 
-    public CustomerOrchestratorService(List<CustomerProcessingRule> processors) {
+    private final CustomerMobileEventProducer customerMobileEventProducer;
+
+    public CustomerOrchestratorService(List<CustomerProcessingRule> processors, CifGeneratorService cifGeneratorService, CustomerMobileEventProducer customerMobileEventProducer) {
         this.processors = processors;
+        this.cifGeneratorService = cifGeneratorService;
+        this.customerMobileEventProducer = customerMobileEventProducer;
     }
 
     @Transactional
@@ -46,8 +48,7 @@ public class CustomerOrchestratorService {
                 cobData.getCustMobNo().getIsd(),
                 LocalDateTime.now()
         );
-        customerMobileEventProducer.publishCustomerCreated(record);
-
+        customerMobileEventProducer.sendMessage(record);
         return newCIF;
     }
 
