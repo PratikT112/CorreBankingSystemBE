@@ -127,6 +127,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex, WebRequest request){
+        logger.warn("Validation exception occurred: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                "VALIDATION_EXCEPTION",
+                ex.getMessage(),
+                "Validation exception occurred for atleast one of the fields provided.",
+                request.getDescription(false).replace("uri=", "")
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     /*
     * Handle JSON parsing exceptions
     * */

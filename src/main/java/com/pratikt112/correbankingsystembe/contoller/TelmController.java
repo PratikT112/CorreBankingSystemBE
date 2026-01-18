@@ -20,11 +20,11 @@ public class TelmController {
 
     @PostMapping("/telm/new")
     public ResponseEntity<?> saveTelm(@RequestBody Telm telm){
-        try {
+//        try {
             Telm saved = telmService.saveTelm(telm);
             return new ResponseEntity<Telm>(saved, HttpStatus.CREATED);
-        } catch (Exception e){
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+//        } catch (Exception e){
+//            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
     }
 }

@@ -1,11 +1,9 @@
 package com.pratikt112.correbankingsystembe.model.telm;
 
 
-import com.pratikt112.correbankingsystembe.utility.DdMmYyyyStringToLocalDateConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +30,6 @@ public class Telm {
     @NotBlank(message = "PRIM_BRANCH is required for teller")
     @Column(name = "PRIM_BRANCH", length = 5)
     private String primBranch;
-
 
     @Column(name = "TERM_IN_BRANCH", length = 3)
     private String termInBranch;
