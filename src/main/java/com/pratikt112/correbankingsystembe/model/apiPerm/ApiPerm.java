@@ -37,11 +37,11 @@ public class ApiPerm implements Serializable {
         if(getClass() != obj.getClass()) return false;
 
         ApiPerm other = (ApiPerm) obj;
-        return Objects.equals(this.perm_code, other.perm_code);
+        return Objects.equals(this.permCode, other.permCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(perm_code);
+        return Objects.hash(permCode);
     }
 }

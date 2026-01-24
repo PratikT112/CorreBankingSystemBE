@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class Usty implements Serializable {
 
     @Id
     @Column(name = "USER_TYPE_CODE", nullable = false, length = 2)
+    @Pattern(regexp = "\\d+", message = "USER_TYPE_CODE must contain only numeric digits")
     private String userTypeCode;
 
     @Column(name = "DESCRIPTION", length = 50, nullable = false)

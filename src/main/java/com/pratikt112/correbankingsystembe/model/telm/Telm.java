@@ -27,7 +27,6 @@ public class Telm {
     @Column(name = "BRCH_NO", length = 5)
     private String brchNo;
 
-    @NotBlank(message = "PRIM_BRANCH is required for teller")
     @Column(name = "PRIM_BRANCH", length = 5)
     private String primBranch;
 
@@ -49,11 +48,9 @@ public class Telm {
     @Column(name = "STAT", length = 2)
     private String stat;
 
-    @NotBlank(message = "CAPABILITY is required")
     @Column(name = "CAPABLE", length = 2)
     private String capable;
 
-    @NotBlank(message = "PRIM_CAPABILITY is required")
     @Column(name = "PRIM_CAP", length = 2)
     private String primCap;
 
@@ -62,7 +59,7 @@ public class Telm {
     private String tellerName;
 
     @NotBlank(message = "TELLER_PASSWORD is required")
-    @Column(name = "TELLER_PWORD", length = 10)
+    @Column(name = "TELLER_PWORD", length = 100)
     private String tellerPword;
 
     @Column(name = "TELLER_PWORD_RETRY", length = 2)
@@ -84,7 +81,6 @@ public class Telm {
     @Column(name = "END_TIME")
     private LocalTime endTime;
 
-    @NotBlank(message = "PRIM_USER_TYPE is required")
     @Column(name = "PRIM_USER_TYPE", length = 2)
     private String primUserType;
 
@@ -109,4 +105,55 @@ public class Telm {
 
     @Column(name = "TELLER_IDENTIFIER", length = 1)
     private String tellerIdentifier = "P";
+
+    @PrePersist
+    public void onCreate(){
+        if(this.primBranch == null){
+            this.primBranch = this.brchNo;
+        }
+
+        if(this.termInBranch == null){
+            this.termInBranch = "001";
+        }
+
+        if(this.postDate == null){
+            this.postDate = LocalDate.now();
+        }
+
+        if(this.signonFlag == null){
+            this.signonFlag = "N";
+        }
+
+        if(this.stat == null){
+            this.stat = "00";
+        }
+
+        if(this.capable == null || this.capable.isBlank()){
+            this.capable = "16";
+        }
+
+        if(this.primCap == null || this.primCap.isBlank()){
+            this.primCap = this.capable;
+        }
+
+        if(this.startTime == null){
+            this.startTime = LocalTime.MIDNIGHT;
+        }
+
+        if(this.endTime == null) {
+            this.endTime = LocalTime.of(23, 59, 59);
+        }
+
+        if(this.primUserType == null || this.primUserType.isBlank()){
+            this.primUserType = this.userType;
+        }
+
+        this.lstSignOnDate = null;
+        this.lstSignOnTime = null;
+        this.lstUnsignOnDate = null;
+        this.lstUnsignOnTime = null;
+        if(this.lstUnsignErrcode == null){
+            this.lstUnsignErrcode = "0000";
+        }
+    }
 }
