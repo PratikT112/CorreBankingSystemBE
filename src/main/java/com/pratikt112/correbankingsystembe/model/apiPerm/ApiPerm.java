@@ -24,7 +24,7 @@ public class ApiPerm implements Serializable {
 
     @Id
     @Column(name = "PERM_CODE", nullable = false, length = 50)
-    private String perm_code;
+    private String permCode;
 
     @Column(name = "DESCRIPTION", length = 200, nullable = false)
     private String description;
