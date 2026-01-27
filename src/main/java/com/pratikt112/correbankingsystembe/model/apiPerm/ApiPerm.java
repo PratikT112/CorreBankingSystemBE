@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +26,13 @@ public class ApiPerm implements Serializable {
 
     @Id
     @Column(name = "PERM_CODE", nullable = false, length = 50)
+    @Size(min = 5, max = 50)
+    @NotBlank
     private String permCode;
 
     @Column(name = "DESCRIPTION", length = 200, nullable = false)
+    @NotBlank
+    @Size(max = 200)
     private String description;
 
     @Override

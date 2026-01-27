@@ -78,7 +78,7 @@ public class TelmService {
             throw new DuplicateRecordException("TELM", reqDto.getTellerNo());
         }
         LOGGER.info("No duplicate record found for tellerNo: {}, proceeding...", reqDto.getTellerNo());
-        if(ustyRepo.existsById(reqDto.getUserType())){
+        if(!ustyRepo.existsById(reqDto.getUserType())){
             throw new RecordNotFoundException("USTY", reqDto.getUserType());
         }
         LOGGER.info("Validation completed for tellerNo: {}, proceeding to persist...", reqDto.getTellerNo());

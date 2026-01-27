@@ -7,7 +7,7 @@ public class RecordNotFoundException extends BankingSystemException {
 
     public RecordNotFoundException(String recordType, String identifier){
         super("RECORD_NOT_FOUND",
-                recordType + "Record not found with key: " + identifier,
+                recordType + " Record not found with key: " + identifier,
                 "No record found with this information. Please check key and try again");
     }
 }
