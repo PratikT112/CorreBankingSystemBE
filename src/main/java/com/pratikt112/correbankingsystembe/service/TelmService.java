@@ -3,7 +3,6 @@ package com.pratikt112.correbankingsystembe.service;
 
 import com.pratikt112.correbankingsystembe.DTOs.TellerCreateRequest;
 import com.pratikt112.correbankingsystembe.exception.DuplicateRecordException;
-import com.pratikt112.correbankingsystembe.exception.IncompleteDataException;
 import com.pratikt112.correbankingsystembe.exception.RecordNotFoundException;
 import com.pratikt112.correbankingsystembe.model.telm.Telm;
 import com.pratikt112.correbankingsystembe.model.telm.TelmId;
@@ -57,6 +56,7 @@ public class TelmService {
     }
 
     private Telm constructTelmFromRequest(TellerCreateRequest reqDto) {
+        System.out.println(reqDto);
         Telm constructed = new Telm();
         constructed.setId(new TelmId("003", reqDto.getTellerNo()));
         constructed.setBrchNo(reqDto.getBrchNo());

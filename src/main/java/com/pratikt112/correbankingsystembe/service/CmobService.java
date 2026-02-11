@@ -2,6 +2,7 @@ package com.pratikt112.correbankingsystembe.service;
 
 
 import com.pratikt112.banking.event.MobileAcknowledgementEventRecord;
+import com.pratikt112.correbankingsystembe.DTOs.CustMobIsd;
 import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.exception.*;
@@ -21,6 +22,8 @@ import com.pratikt112.correbankingsystembe.utility.TimeUtilityHHMMSSmmm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -455,4 +458,7 @@ public class CmobService {
         }
     }
 
+    public Page<CustMobIsd> allCustMobIsd(Pageable pageable) {
+        return cmobRepo.getCustMobIsd(pageable);
+    }
 }

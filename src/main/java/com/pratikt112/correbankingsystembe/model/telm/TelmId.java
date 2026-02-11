@@ -1,7 +1,9 @@
 package com.pratikt112.correbankingsystembe.model.telm;
 
 
+import com.pratikt112.correbankingsystembe.utility.TellerNoConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +23,8 @@ public class TelmId {
     @Column(name = "SOC_NO", length = 3)
     private String socNo;
 
-    @Column(name = "TELLER_NO", length = 7)
+    @Column(name = "TELLER_NO", length = 16)
+    @Convert(converter = TellerNoConverter.class)
     private String tellerNo;
 
 
