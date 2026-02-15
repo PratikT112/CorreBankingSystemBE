@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PutmRepo extends JpaRepository<Putm, PutmId> {
+
+    public boolean existsByIdAndStatus(PutmId id, String status);
 }
