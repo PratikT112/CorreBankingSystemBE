@@ -21,7 +21,7 @@ public class CBSUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String tellerNo) throws UsernameNotFoundException {
         Telm user = telmRepo.findById(new TelmId("003", tellerNo)).orElseThrow(()-> new UserNotFoundException(tellerNo));
-
+        return null;
     }
 
 

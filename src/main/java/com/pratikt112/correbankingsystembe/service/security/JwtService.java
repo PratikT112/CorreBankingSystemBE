@@ -6,10 +6,12 @@ import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
@@ -22,16 +24,23 @@ public class JwtService {
     public String generateToken(String tellerNo, String userType){
         String jti = UUID.randomUUID().toString();
 
+        Instant now = Instant.now();
+
         return Jwts.builder()
-                .subject(tellerNo).id(jti)
+                .subject(tellerNo)
+                .id(jti)
                 .claim("userType", userType)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusMillis(EXPIRATION)))
+                .signWith(key)
                 .compact();
     }
 
     public Claims extractClaims(String token){
-        return Jwts.parser().set
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

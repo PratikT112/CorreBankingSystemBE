@@ -15,6 +15,4 @@ public interface TelmRepo extends JpaRepository<Telm, TelmId> {
     List<Telm> id(TelmId id);
 
     Telm findTelmById(TelmId id);
-
-    TelmId id(TelmId id);
 }
