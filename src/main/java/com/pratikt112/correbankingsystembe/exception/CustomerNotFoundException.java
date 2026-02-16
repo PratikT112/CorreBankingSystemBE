@@ -1,6 +1,5 @@
 package com.pratikt112.correbankingsystembe.exception;
 
-import org.hibernate.cache.CacheException;
 
 public class CustomerNotFoundException extends BankingSystemException{
     public CustomerNotFoundException(String errorCode, String message, String userMessage) {

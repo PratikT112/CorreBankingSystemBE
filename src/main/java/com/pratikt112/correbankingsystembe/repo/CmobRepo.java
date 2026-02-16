@@ -1,8 +1,11 @@
 package com.pratikt112.correbankingsystembe.repo;
 
 
+import com.pratikt112.correbankingsystembe.DTOs.CustMobIsd;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -41,4 +44,8 @@ public interface CmobRepo extends JpaRepository<Cmob, CmobId> {
                            @Param("mobileNumber") String mobileNumber,
                            @Param("isdCode") String isdCode,
                            @Param("dov") LocalDate dov);
+
+
+    @Query("SELECT new com.pratikt112.correbankingsystembe.DTOs.CustMobIsd(c.id.custNo, c.custMobNo, c.isdCode) FROM Cmob c")
+    Page<CustMobIsd> getCustMobIsd(Pageable pageable);
 }

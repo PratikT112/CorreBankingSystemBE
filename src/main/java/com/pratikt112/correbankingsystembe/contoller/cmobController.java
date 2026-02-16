@@ -1,6 +1,7 @@
 package com.pratikt112.correbankingsystembe.contoller;
 
 
+import com.pratikt112.correbankingsystembe.DTOs.CustMobIsd;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
 import com.pratikt112.correbankingsystembe.model.mobh.Mobh;
@@ -10,6 +11,8 @@ import com.pratikt112.correbankingsystembe.service.CmobService;
 import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
 import com.pratikt112.correbankingsystembe.utility.TimeUtilityHHMMSSmmm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +45,12 @@ public class cmobController {
     public ResponseEntity<List<String>> ocomByCustNo(@PathVariable("socNo") String socNo, @PathVariable("custNo") String custNo){
         List<String> ocomMobile = cmobService.OcomFromCmob(socNo, custNo);
         return new ResponseEntity<>(ocomMobile, HttpStatus.OK);
+    }
+
+    @GetMapping("/cmob/allCustMobIsd")
+    public ResponseEntity<List<CustMobIsd>> allCustMobIsd(Pageable pageable){
+        Page<CustMobIsd> custMobIsdList = cmobService.allCustMobIsd(pageable);
+        return new ResponseEntity<>(custMobIsdList.getContent(), HttpStatus.OK);
     }
 
 

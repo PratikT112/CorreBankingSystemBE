@@ -28,10 +28,12 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
-        http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
+//        http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
         http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 //        http.formLogin(withDefaults());
-        http.httpBasic(withDefaults());
+//        http.httpBasic(withDefaults());
+        http.csrf(csrf->csrf.disable())
+                .authorizeHttpRequests(auth->auth.anyRequest().permitAll());
         return http.build();
     }
 

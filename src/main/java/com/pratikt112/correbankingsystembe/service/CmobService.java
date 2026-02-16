@@ -2,6 +2,7 @@ package com.pratikt112.correbankingsystembe.service;
 
 
 import com.pratikt112.banking.event.MobileAcknowledgementEventRecord;
+import com.pratikt112.correbankingsystembe.DTOs.CustMobIsd;
 import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.exception.*;
@@ -21,6 +22,8 @@ import com.pratikt112.correbankingsystembe.utility.TimeUtilityHHMMSSmmm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -316,32 +319,26 @@ public class CmobService {
 
     @Transactional
     public List<Cmob> saveCmob(List<Cmob> cmobList) {
-        try{
-            List<Cmob> savedCmob = new ArrayList<Cmob>();
-            if (cmobList.size() == 2) {
-                Cmob first;
-                Cmob second;
-                if (Objects.equals(cmobList.get(0).getId().getIdentifier(), Identifier.T.toString())) {
-                    first = cmobList.get(0);
-                    second = cmobList.get(1);
-                } else {
-                    first = cmobList.get(1);
-                    second = cmobList.get(0);
-                }
-
-                return saveTwoCmobEntries(first, second);
-            } else if(cmobList.size() == 1){
-                Cmob theOne = cmobList.get(0);
-                return saveSingleCmobEntry(theOne);
+        List<Cmob> savedCmob = new ArrayList<Cmob>();
+        if (cmobList.size() == 2) {
+            Cmob first;
+            Cmob second;
+            if (Objects.equals(cmobList.get(0).getId().getIdentifier(), Identifier.T.toString())) {
+                first = cmobList.get(0);
+                second = cmobList.get(1);
             } else {
-                throw new ValidationException("VALIDATION_ERROR",
-                        "Invalid Mobile Number count.",
-                        "Either 1 or 2 mobile numbers can be provided for a customer during creation.");
+                first = cmobList.get(1);
+                second = cmobList.get(0);
             }
-        } catch (DataIntegrityViolationException e){
-            throw new RuntimeException("Database constraint violated while saving CMOB or MOBH: " + e.getMostSpecificCause().getMessage(), e);
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error while saving CMOB and MOBH", e);
+
+            return saveTwoCmobEntries(first, second);
+        } else if(cmobList.size() == 1){
+            Cmob theOne = cmobList.get(0);
+            return saveSingleCmobEntry(theOne);
+        } else {
+            throw new ValidationException("VALIDATION_ERROR",
+                    "Invalid Mobile Number count.",
+                    "Either 1 or 2 mobile numbers can be provided for a customer during creation.");
         }
     }
 
@@ -455,4 +452,7 @@ public class CmobService {
         }
     }
 
+    public Page<CustMobIsd> allCustMobIsd(Pageable pageable) {
+        return cmobRepo.getCustMobIsd(pageable);
+    }
 }
