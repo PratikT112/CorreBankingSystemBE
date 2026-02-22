@@ -344,45 +344,43 @@ public class CmobService {
 
 
     public List<Cmob> findForVerification(String socNo, String custNo, String isdCode, String custMobNo) {
-        return cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
+
+        List<Cmob> byIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo = cmobRepo.findByIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo(socNo, custNo, isdCode, custMobNo);
+        if(byIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo.isEmpty()){
+            throw new RecordNotFoundException("CMOB", "No mobile number found for verification", "No mobile number found for verification");
+        }else {
+            return byIdSocNoAndIdCustNoAndIsdCodeAndCustMobNo;
+        }
     }
 
     @Transactional
     public Cmob amendMobileNumber(String socNo, String custNo, String identifier, String newIsdCode, String newCustMobNo) {
-        try {
-            if(socNo == null || custNo == null || identifier == null || newIsdCode == null || newCustMobNo == null){
-                throw new IllegalArgumentException("Required Parameters not provided.");
-            }
-
-            Cmob toBeAmended = cmobRepo.findById(new CmobId(socNo, custNo, identifier)).orElseThrow(()-> new RecordNotFoundException("CMOB", custNo));
-            if(Objects.equals(toBeAmended.getIsdCode(), newIsdCode) && Objects.equals(toBeAmended.getCustMobNo(), newCustMobNo)){
-//                throw new IllegalArgumentException();
-                throw new ValidationException("AMENDMENT_EXCEPTION",
-                        "Previous and New Mobile numbers cannot be the same",
-                        "Provide a different mobile number for amendment");
-            }
-
-            if(!Objects.equals(toBeAmended.getVerifyFlag(), VerifyFlag.Y)){
-//                throw new IllegalArgumentException("Previous Mobile number not verified");
-                throw new ValidationException("AMENDMENT_EXCEPTION",
-                        "Previous Mobile number not verified",
-                        "Previous Mobile number should be verified before amendment");
-            }
-
-            toBeAmended.setOldMobIsdCode(toBeAmended.getIsdCode());
-            toBeAmended.setOldCustMobNo(toBeAmended.getCustMobNo());
-            toBeAmended.setIsdCode(newIsdCode);
-            toBeAmended.setCustMobNo(newCustMobNo);
-            toBeAmended.setVerifyFlag(VerifyFlag.N);
-            toBeAmended.setDov(null);
-            return (Cmob) persistCmobAndMobh(List.of(toBeAmended)).get(0);
-        } catch (IllegalArgumentException e){
-            throw e;
-        } catch (DataIntegrityViolationException e){
-            throw new RuntimeException("Database constraint violated while updating CMOB or MOBH: " + e.getMostSpecificCause().getMessage(), e);
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error while updating CMOB and MOBH", e);
+        if(socNo == null || custNo == null || identifier == null || newIsdCode == null || newCustMobNo == null){
+            throw new IllegalArgumentException("Required Parameters not provided.");
         }
+
+        Cmob toBeAmended = cmobRepo.findById(new CmobId(socNo, custNo, identifier)).orElseThrow(()-> new RecordNotFoundException("CMOB", custNo));
+        if(Objects.equals(toBeAmended.getIsdCode(), newIsdCode) && Objects.equals(toBeAmended.getCustMobNo(), newCustMobNo)){
+//                throw new IllegalArgumentException();
+            throw new ValidationException("AMENDMENT_EXCEPTION",
+                    "Previous and New Mobile numbers cannot be the same",
+                    "Provide a different mobile number for amendment");
+        }
+
+        if(!Objects.equals(toBeAmended.getVerifyFlag(), VerifyFlag.Y)){
+//                throw new IllegalArgumentException("Previous Mobile number not verified");
+            throw new ValidationException("AMENDMENT_EXCEPTION",
+                    "Previous Mobile number not verified",
+                    "Previous Mobile number should be verified before amendment");
+        }
+
+        toBeAmended.setOldMobIsdCode(toBeAmended.getIsdCode());
+        toBeAmended.setOldCustMobNo(toBeAmended.getCustMobNo());
+        toBeAmended.setIsdCode(newIsdCode);
+        toBeAmended.setCustMobNo(newCustMobNo);
+        toBeAmended.setVerifyFlag(VerifyFlag.N);
+        toBeAmended.setDov(null);
+        return (Cmob) persistCmobAndMobh(List.of(toBeAmended)).get(0);
     }
 
     @Transactional
