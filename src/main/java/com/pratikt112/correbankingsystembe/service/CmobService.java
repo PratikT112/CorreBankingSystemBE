@@ -3,19 +3,19 @@ package com.pratikt112.correbankingsystembe.service;
 
 import com.pratikt112.banking.event.MobileAcknowledgementEventRecord;
 import com.pratikt112.correbankingsystembe.DTOs.CustMobIsd;
+import com.pratikt112.correbankingsystembe.config.mobileConfig.amendConfig.MobileAmendCcntConfig;
 import com.pratikt112.correbankingsystembe.enums.Identifier;
 import com.pratikt112.correbankingsystembe.enums.VerifyFlag;
 import com.pratikt112.correbankingsystembe.exception.*;
+import com.pratikt112.correbankingsystembe.model.ccnt.Ccnt;
+import com.pratikt112.correbankingsystembe.model.ccnt.CcntId;
 import com.pratikt112.correbankingsystembe.model.cmob.Cmob;
 import com.pratikt112.correbankingsystembe.model.cmob.CmobId;
 import com.pratikt112.correbankingsystembe.model.mbex.Mbex;
 import com.pratikt112.correbankingsystembe.model.mbex.MbexId;
 import com.pratikt112.correbankingsystembe.model.mobh.Mobh;
 import com.pratikt112.correbankingsystembe.model.mobh.MobhId;
-import com.pratikt112.correbankingsystembe.repo.ChnlMobVerifyRepo;
-import com.pratikt112.correbankingsystembe.repo.CmobRepo;
-import com.pratikt112.correbankingsystembe.repo.MbexRepo;
-import com.pratikt112.correbankingsystembe.repo.MobhRepo;
+import com.pratikt112.correbankingsystembe.repo.*;
 import com.pratikt112.correbankingsystembe.utility.DateConverter;
 import com.pratikt112.correbankingsystembe.utility.DateUtilityDDMMYYYY;
 import com.pratikt112.correbankingsystembe.utility.TimeUtilityHHMMSSmmm;
@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Slf4j
@@ -56,6 +57,21 @@ public class CmobService {
 
     @Autowired
     private DateConverter dateConverter;
+
+
+    private final MobileAmendCcntConfig ccntConfig;
+
+    private final CcntRepo ccntRepo;
+
+    private final CcntService ccntService;
+
+
+    public CmobService(MobileAmendCcntConfig ccntConfig, CcntRepo ccntRepo, CcntService ccntService) {
+        this.ccntConfig = ccntConfig;
+        this.ccntRepo = ccntRepo;
+        this.ccntService = ccntService;
+    }
+
 
 //    Cmob test = new Cmob();
 //    test.getId(); // If this gives an error, it's Lombok or import issue
@@ -373,6 +389,30 @@ public class CmobService {
                     "Previous Mobile number not verified",
                     "Previous Mobile number should be verified before amendment");
         }
+
+        if(ccntConfig.isLive()){
+            ccntService.processCcnt(socNo, custNo);
+        }
+
+
+//        if(ccntConfig.isLive()){
+//            Optional<Ccnt> ccntById = ccntRepo.findById(new CcntId(socNo, custNo));
+//            if(ccntById.isPresent()){
+//                Ccnt ccnt = ccntById.get();
+//                if(ccnt.getMobAmendStatus().equals("00")){
+//                    if(ccnt.getMobAmendCount() < ccntConfig.getMaxCount() &&
+//                            ChronoUnit.DAYS.between(ccnt.getLstMobAmendDate(), LocalDate.now()) >= ccntConfig.getDays()){
+//                        ccnt.setMobAmendCount(ccnt.getMobAmendCount() + 1);
+//                        ccnt.setLstMobAmendDate(LocalDate.now());
+//                        ccntRepo.save(ccnt);
+//                    } else {
+//                        ccnt.setMobAmendCount(1);
+//                        ccnt.setLstMobAmendDate(LocalDate.now());
+//                        ccntRepo.save(ccnt);
+//                    }
+//                }
+//            }
+//        }
 
         toBeAmended.setOldMobIsdCode(toBeAmended.getIsdCode());
         toBeAmended.setOldCustMobNo(toBeAmended.getCustMobNo());

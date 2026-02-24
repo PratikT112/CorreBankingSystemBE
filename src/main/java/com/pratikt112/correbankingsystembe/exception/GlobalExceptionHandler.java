@@ -127,6 +127,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(MobileAmendmentRestrictedException.class)
+    public ResponseEntity<ErrorResponse> handleMobileAmendmentRestrictedException(MobileAmendmentRestrictedException ex, WebRequest request){
+        logger.warn("Mobile Amendment Restriction exception occurred: {}: {}", ex.getErrorCode(), ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                "MOBILE_AMENDMENT_RESTRICTED_EXCEPTION",
+                ex.getMessage(),
+                ex.getUserMessage(),
+                request.getDescription(false).replace("uri=", "")
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex, WebRequest request){
         logger.warn("Validation exception occurred: {}", ex.getMessage());

@@ -7,7 +7,7 @@ public class CifGenerationException extends BankingSystemException{
     }
 
     public CifGenerationException(String errorCode, String message, String userMessage, Throwable cause) {
-        super(errorCode, message, userMessage, cause);
+        super(errorCode, message, userMessage, String.valueOf(cause));
     }
 
     public CifGenerationException(String message){
@@ -20,6 +20,6 @@ public class CifGenerationException extends BankingSystemException{
         super("CIF_GENERATION_ERROR",
                 "Failed to generate CIF: " + message,
                 "Unable to generate CIF no. Please try again later.",
-                cause);
+                String.valueOf(cause));
     }
 }

@@ -6,7 +6,7 @@ public class ProcessingException extends BankingSystemException{
     }
 
     public ProcessingException(String errorCode, String message, String userMessage, Throwable cause) {
-        super(errorCode, message, userMessage, cause);
+        super(errorCode, message, userMessage, String.valueOf(cause));
     }
 
     public ProcessingException(String processor, String message) {
@@ -19,6 +19,6 @@ public class ProcessingException extends BankingSystemException{
         super("PROCESSING_ERROR",
                 "Processing failed in " + processor + ": " + message,
                 "Customer processing failed. Please try again later.",
-                cause);
+                String.valueOf(cause));
     }
 }

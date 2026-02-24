@@ -10,7 +10,7 @@ public class IncompleteDataException extends BankingSystemException{
     }
 
     public IncompleteDataException(String errorCode, String message, String userMessage, Throwable cause) {
-        super(errorCode, message, userMessage, cause);
+        super(errorCode, message, userMessage, String.valueOf(cause));
     }
 
     public IncompleteDataException(String EntityName, String fieldName) {

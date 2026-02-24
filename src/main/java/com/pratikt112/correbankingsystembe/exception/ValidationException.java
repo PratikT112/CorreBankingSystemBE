@@ -7,7 +7,7 @@ public class ValidationException extends BankingSystemException{
     }
 
     public ValidationException(String errorCode, String message, String userMessage, Throwable cause) {
-        super(errorCode, message, userMessage, cause);
+        super(errorCode, message, userMessage, String.valueOf(cause));
     }
 
     public ValidationException(String field, String message){
@@ -26,6 +26,6 @@ public class ValidationException extends BankingSystemException{
         super("VALIDATION_ERROR",
                 "Validation failed: " + message,
                 "Invalid data provided: " + message,
-                cause);
+                String.valueOf(cause));
     }
 }

@@ -6,7 +6,7 @@ public class DatabaseException extends BankingSystemException{
     }
 
     public DatabaseException(String errorCode, String message, String userMessage, Throwable cause) {
-        super(errorCode, message, userMessage, cause);
+        super(errorCode, message, userMessage, String.valueOf(cause));
     }
 
     public DatabaseException(String operation, String message) {
@@ -19,6 +19,6 @@ public class DatabaseException extends BankingSystemException{
         super("DATABASE_ERROR",
                 "Database operation failed during " + operation + ": " + message,
                 "A database error occurred. Please try again later.",
-                cause);
+                String.valueOf(cause));
     }
 }

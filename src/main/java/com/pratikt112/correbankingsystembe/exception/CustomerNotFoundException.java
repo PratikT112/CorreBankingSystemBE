@@ -7,7 +7,7 @@ public class CustomerNotFoundException extends BankingSystemException{
     }
 
     public CustomerNotFoundException(String errorCode, String message, String userMessage, Throwable cause) {
-        super(errorCode, message, userMessage, cause);
+        super(errorCode, message, userMessage, String.valueOf(cause));
     }
 
     public CustomerNotFoundException(String custNo){
@@ -20,6 +20,6 @@ public class CustomerNotFoundException extends BankingSystemException{
         super("CUSTOMER_NOT_FOUND",
                 "Customer not found with ID: " + custNo,
                 "Customer not found. Please verify the customer number and try again",
-                cause);
+                String.valueOf(cause));
     }
 }
